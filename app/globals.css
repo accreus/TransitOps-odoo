@@ -1,26 +1,239 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Industrial dispatch palette */
+  --color-background: #121416;
+  --color-foreground: #e8e6e3;
+  --color-card: #1a1d21;
+  --color-card-foreground: #e8e6e3;
+  --color-popover: #1e2126;
+  --color-popover-foreground: #e8e6e3;
+  --color-primary: #ffb020;
+  --color-primary-foreground: #121416;
+  --color-secondary: #2a2e33;
+  --color-secondary-foreground: #e8e6e3;
+  --color-muted: #1e2126;
+  --color-muted-foreground: #7a8290;
+  --color-accent: #2a2e33;
+  --color-accent-foreground: #e8e6e3;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #2e3238;
+  --color-input: #2e3238;
+  --color-ring: #ffb020;
+
+  /* Industrial status palette */
+  --color-status-available: #22c55e;
+  --color-status-on-trip: #3b82f6;
+  --color-status-in-shop: #f59e0b;
+  --color-status-retired: #6b7280;
+  --color-status-suspended: #dc2626;
+  --color-status-off-duty: #8b5cf6;
+  --color-status-draft: #6b7280;
+  --color-status-dispatched: #3b82f6;
+  --color-status-in-transit: #06b6d4;
+  --color-status-completed: #22c55e;
+  --color-status-cancelled: #dc2626;
+  --color-status-scheduled: #f59e0b;
+  --color-status-in-progress: #3b82f6;
+
+  /* Sidebar */
+  --color-sidebar: #0f1113;
+  --color-sidebar-foreground: #a0a8b4;
+  --color-sidebar-active: #1e2126;
+  --color-sidebar-active-foreground: #ffb020;
+
+  --font-display: "Oswald", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Inter", sans-serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Blueprint grid background */
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  background-image:
+    linear-gradient(rgba(255, 176, 32, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 176, 32, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted-foreground);
+}
+
+/* Split-flap animation for KPI cards */
+@keyframes flip-in {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes stagger-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stamp-in {
+  0% {
+    transform: scale(1.3) rotate(-4deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.95) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes manifest-print {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-flip-in {
+  animation: flip-in 0.4s ease-out forwards;
+}
+
+.animate-stagger-in {
+  animation: stagger-in 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-stamp-in {
+  animation: stamp-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-manifest-print {
+  animation: manifest-print 0.25s ease-out forwards;
+  opacity: 0;
+}
+
+/* Status stamp effect */
+.status-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* Hazard stripe divider */
+.hazard-divider {
+  height: 4px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-primary),
+    var(--color-primary) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  opacity: 0.3;
+}
+
+/* Vignette effect on dashboard */
+.dashboard-vignette {
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* Tabular numbers for data */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Industrial input styles */
+input, select, textarea {
+  font-family: var(--font-sans);
+}
+
+/* Focus ring override for industrial theme */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-flip-in,
+  .animate-stagger-in,
+  .animate-stamp-in,
+  .animate-manifest-print {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Data table row hover */
+.table-row-hover {
+  transition: background-color 100ms ease-out;
+}
+.table-row-hover:hover {
+  background-color: rgba(255, 176, 32, 0.04);
+}
+
+/* Monospace number rendering */
+.mono-data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+}
+
+/* Sidebar link active indicator */
+.sidebar-link-active {
+  position: relative;
+}
+.sidebar-link-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  background: var(--color-primary);
+  border-radius: 0 2px 2px 0;
 }
