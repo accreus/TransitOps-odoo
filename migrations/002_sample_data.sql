@@ -1,6 +1,14 @@
 -- TransitOps Sample Data
 -- Run this in Supabase SQL Editor AFTER running 000_full_schema.sql
 
+-- Clean up existing data to avoid unique constraint violations on re-run
+DELETE FROM fuel_logs;
+DELETE FROM maintenance_logs;
+DELETE FROM expenses;
+DELETE FROM trips;
+DELETE FROM vehicles;
+DELETE FROM drivers;
+
 -- ═══════════════════════════════════════════════════════════════════════════════
 -- VEHICLES
 -- ═══════════════════════════════════════════════════════════════════════════════

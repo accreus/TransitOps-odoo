@@ -108,7 +108,7 @@ const DB_TO_FE: Record<string, string> = {
   total_trips: "totalTrips",
   trip_number: "tripNumber",
   cargo_description: "cargoDescription",
-  cargo_weight: "cargoWeight",
+  cargo_weight: "cargoWeightKg",
   planned_distance: "distanceKm",
   scheduled_departure: "scheduledDeparture",
   actual_departure: "actualDeparture",
