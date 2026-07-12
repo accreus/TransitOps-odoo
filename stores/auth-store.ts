@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { createClient } from "@/lib/supabase/client";
-import { toFrontendRole, type FrontendRole } from "@/lib/constants";
+import { toFrontendRole, toDbRole, type FrontendRole } from "@/lib/constants";
 import type { User, UserRole } from "@/types";
 
 function normalizeRole(dbRole: string): UserRole {
@@ -25,6 +25,7 @@ interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
+  signup: (name: string, email: string, password: string, role: UserRole) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   switchRole: (role: UserRole) => void;
   initialize: () => Promise<void>;
@@ -91,6 +92,53 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     return false;
+  },
+
+  signup: async (name, email, password, role) => {
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name, role } },
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    if (!data.user) {
+      return { success: false, error: "User creation failed" };
+    }
+
+    const { error: profileError } = await supabase
+      .from("users")
+      .insert({
+        id: data.user.id,
+        email,
+        name,
+        role: toDbRole(role as FrontendRole),
+      });
+
+    if (profileError) {
+      return { success: false, error: profileError.message };
+    }
+
+    if (data.session) {
+      const { data: profile } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", data.user.id)
+        .single();
+
+      if (profile) {
+        set({
+          user: profileToUser(profile),
+          isAuthenticated: true,
+        });
+      }
+    }
+
+    return { success: true };
   },
 
   logout: async () => {

@@ -1,5 +1,5 @@
 import { createClient } from './supabase/server'
-import { toFrontendRole, type FrontendRole } from './constants'
+import { toFrontendRole, toDbRole, type FrontendRole } from './constants'
 
 export interface AuthUser {
   id: string
@@ -38,7 +38,7 @@ export async function signUp({ email, password, name, role }: SignupCredentials)
       id: authData.user.id,
       email,
       name,
-      role, // stored as snake_case in frontend, DB CHECK constraint must accept it
+      role: toDbRole(role),
     })
     .select()
     .single()
