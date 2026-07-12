@@ -95,8 +95,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-20 lg:pb-6 dashboard-vignette">
           {children}
         </main>
+
+        {/* System status footer — inside main content column */}
+        <SystemFooter />
       </div>
-      <SystemFooter />
     </div>
     <MobileBottomNav />
     </ShortcutsProvider>

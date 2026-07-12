@@ -186,16 +186,24 @@ export default function DashboardPage() {
                 {filteredVehicles.length} / {vehicles.length}
               </span>
             </div>
-            <div className="flex-1 overflow-y-auto">
-              <table className="w-full text-sm" role="table">
+            <div className="flex-1 overflow-auto">
+              <table className="w-full table-fixed text-sm" role="table">
+                <colgroup>
+                  <col className="w-[15%]" />
+                  <col className="w-[12%] hidden sm:table-column" />
+                  <col className="w-[25%] hidden md:table-column" />
+                  <col className="w-[18%] hidden lg:table-column" />
+                  <col className="w-[15%] hidden xl:table-column" />
+                  <col className="w-[15%] sm:w-[15%]" />
+                </colgroup>
                 <thead className="sticky top-0 bg-card z-10">
                   <tr className="border-b border-border">
-                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold">REG</th>
-                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold hidden sm:table-cell">TYPE</th>
-                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold hidden md:table-cell">VEHICLE</th>
-                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold hidden lg:table-cell">REGION</th>
-                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold hidden xl:table-cell">ODOMETER</th>
-                    <th className="text-right px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold">STATUS</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold whitespace-nowrap">REG</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold whitespace-nowrap hidden sm:table-cell">TYPE</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold whitespace-nowrap hidden md:table-cell">VEHICLE</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold whitespace-nowrap hidden lg:table-cell">REGION</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold whitespace-nowrap hidden xl:table-cell">ODOMETER</th>
+                    <th className="text-right px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold whitespace-nowrap">STATUS</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -205,23 +213,23 @@ export default function DashboardPage() {
                       className="border-b border-border/30 table-row-hover animate-manifest-print"
                       style={{ animationDelay: `${i * 30}ms` }}
                     >
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-2 overflow-hidden text-ellipsis whitespace-nowrap">
                         <span className="mono-data font-semibold text-foreground text-xs">{vehicle.regNumber}</span>
                       </td>
-                      <td className="px-4 py-2 hidden sm:table-cell">
+                      <td className="px-4 py-2 hidden sm:table-cell whitespace-nowrap">
                         <span className="text-[0.65rem] uppercase text-muted-foreground font-display tracking-wider">{vehicle.type}</span>
                       </td>
-                      <td className="px-4 py-2 hidden md:table-cell">
+                      <td className="px-4 py-2 hidden md:table-cell overflow-hidden text-ellipsis whitespace-nowrap">
                         <span className="text-xs text-foreground">{vehicle.make} {vehicle.model}</span>
                         <span className="text-[0.6rem] text-muted-foreground ml-1.5">{vehicle.year}</span>
                       </td>
-                      <td className="px-4 py-2 hidden lg:table-cell">
+                      <td className="px-4 py-2 hidden lg:table-cell whitespace-nowrap">
                         <span className="text-[0.65rem] text-muted-foreground">{vehicle.region}</span>
                       </td>
-                      <td className="px-4 py-2 hidden xl:table-cell">
+                      <td className="px-4 py-2 hidden xl:table-cell whitespace-nowrap">
                         <span className="mono-data text-[0.65rem] text-muted-foreground">{vehicle.currentOdometer.toLocaleString()}</span>
                       </td>
-                      <td className="px-4 py-2 text-right">
+                      <td className="px-4 py-2 text-right whitespace-nowrap">
                         <StatusBadge status={vehicle.status} />
                       </td>
                     </tr>
