@@ -2,14 +2,14 @@ import { createClient } from '@supabase/supabase-js'
 
 // Load environment variables for Node.js scripts
 if (typeof window === 'undefined') {
-  require('dotenv').config()
+  try { require('dotenv').config() } catch {}
 }
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://howccngzkmxxtbdbdoef.supabase.co/'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_tVoyIF7Vx4qKKJKgtNe2rg_RbCqWQ5h'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
+  throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be set')
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
