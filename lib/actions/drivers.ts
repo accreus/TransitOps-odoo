@@ -1,21 +1,10 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { requireAuth, requireRole } from "@/lib/auth-helpers";
 import * as driverService from "@/lib/services/driver-service";
-import { createDriverSchema } from "@/lib/validation";
+import { createDriverSchema, updateDriverSchema } from "@/lib/validation";
 import type { ServiceResult } from "@/lib/types";
 import type { Driver, DriverStatus } from "@/types";
-
-async function requireAuth(): Promise<ServiceResult<string>> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) return { success: false, error: "Unauthorized" };
-  return { success: true, data: user.id };
-}
 
 export async function getDrivers(filters?: {
   status?: DriverStatus;
@@ -46,9 +35,12 @@ export async function createDriver(
   const auth = await requireAuth();
   if (!auth.success) return auth;
 
+  const roleCheck = requireRole(auth.data.role, "drivers", "create");
+  if (!roleCheck.success) return roleCheck;
+
   const parsed = createDriverSchema.safeParse(input);
   if (!parsed.success) {
-    return { success: false, error: parsed.error.issues[0].message };
+    return { success: false, error: parsed.error.issues[0].message, field: parsed.error.issues[0].path.join(".") };
   }
 
   return driverService.createDriver(parsed.data as Omit<Driver, "id">);
@@ -60,7 +52,22 @@ export async function updateDriver(
 ): Promise<ServiceResult<Driver>> {
   const auth = await requireAuth();
   if (!auth.success) return auth;
-  return driverService.updateDriver(id, updates);
+
+  // Safety score updates are restricted to fleet_manager and safety_officer
+  if (updates.safetyScore !== undefined) {
+    const scoreCheck = requireRole(auth.data.role, "safety_score", "update");
+    if (!scoreCheck.success) return scoreCheck;
+  } else {
+    const roleCheck = requireRole(auth.data.role, "drivers", "update");
+    if (!roleCheck.success) return roleCheck;
+  }
+
+  const parsed = updateDriverSchema.safeParse(updates);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0].message, field: parsed.error.issues[0].path.join(".") };
+  }
+
+  return driverService.updateDriver(id, parsed.data);
 }
 
 export async function deleteDriver(
@@ -68,5 +75,9 @@ export async function deleteDriver(
 ): Promise<ServiceResult<void>> {
   const auth = await requireAuth();
   if (!auth.success) return auth;
+
+  const roleCheck = requireRole(auth.data.role, "drivers", "delete");
+  if (!roleCheck.success) return roleCheck;
+
   return driverService.deleteDriver(id);
 }

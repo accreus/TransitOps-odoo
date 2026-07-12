@@ -1,19 +1,7 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { requireAuth } from "@/lib/auth-helpers";
 import * as reportService from "@/lib/services/report-service";
-import type { ServiceResult } from "@/lib/types";
-
-async function requireAuth(): Promise<ServiceResult<string>> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) return { success: false, error: "Unauthorized" };
-  return { success: true, data: user.id };
-}
 
 export async function getFleetUtilization() {
   const auth = await requireAuth();
