@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed-demo": "tsx scripts/seed-demo-data.ts",
+    "setup-complete": "tsx scripts/setup-fixed.ts",
+    "debug-setup": "tsx scripts/debug-setup.ts",
+    "fix-and-go": "tsx scripts/fix-and-go.ts",
+    "final-setup": "tsx scripts/final-setup.ts",
+    "setup": "echo '🚨 TransitOps Setup Guide:' && echo '1. Apply schema.sql in Supabase Dashboard' && echo '2. Apply rls-policies.sql in Supabase Dashboard' && echo '3. Apply storage-setup.sql in Supabase Dashboard' && echo '4. Create admin user in Supabase Auth (use real email)' && echo '5. Run: npm run final-setup'"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
@@ -21,6 +27,7 @@
     "recharts": "^3.9.2",
     "resend": "^6.17.2",
     "tailwind-merge": "^3.6.0",
+    "tsx": "^4.23.0",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
