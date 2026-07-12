@@ -1,9 +1,0 @@
-vehicle_id,description,type,date,cost,state,mechanic,date,updated_at
-a1b2c3d4-e5f6-7890-abcd-ef1234567892,Engine oil change and filter replacement,preventive,2026-05-15,8500,closed,Sharma Auto Works,2026-05-15,2026-05-15 10:00:00+00
-a1b2c3d4-e5f6-7890-abcd-ef1234567894,Brake pad replacement rear axle,corrective,2026-04-20,12000,closed,Kolkata Motors,2026-04-20,2026-04-20 14:30:00+00
-a1b2c3d4-e5f6-7890-abcd-ef1234567896,AC compressor replacement,corrective,2026-06-01,25000,closed,Vizag Fleet Services,2026-06-01,2026-06-01 11:00:00+00
-a1b2c3d4-e5f6-7890-abcd-ef1234567893,Annual safety inspection,inspection,2026-03-10,5000,closed,Surat Auto Care,2026-03-10,2026-03-10 09:00:00+00
-a1b2c3d4-e5f6-7890-abcd-ef1234567890,Tyres replacement all 4 wheels,corrective,2026-05-28,32000,open,Mumbai Tyre Zone,2026-05-28,2026-05-28 16:00:00+00
-a1b2c3d4-e5f6-7890-abcd-ef1234567897,Transmission service,preventive,2026-07-01,18000,open,Lucknow Garage,2026-07-01,2026-07-01 08:30:00+00
-a1b2c3d4-e5f6-7890-abcd-ef1234567895,Electrical wiring repair,emergency,2026-06-18,8500,closed,Chennai Auto Electric,2026-06-18,2026-06-18 13:00:00+00
-a1b2c3d4-e5f6-7890-abcd-ef1234567899,Clutch plate replacement,corrective,2026-06-10,15000,closed,Delhi Heavy Vehicles,2026-06-10,2026-06-10 10:30:00+00
