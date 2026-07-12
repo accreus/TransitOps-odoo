@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { mapRowsToCamelCase, mapToSnakeCase } from "@/lib/db-mapper";
 import type { ServiceResult } from "@/lib/types";
 import type { FuelEntry, ExpenseEntry } from "@/types";
 
@@ -10,18 +11,18 @@ export async function getFuelEntries(vehicleId?: string): Promise<ServiceResult<
 
   const { data, error } = await query;
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as FuelEntry[] };
+  return { success: true, data: mapRowsToCamelCase<FuelEntry>(data ?? []) };
 }
 
 export async function addFuelEntry(entry: Omit<FuelEntry, "id">): Promise<ServiceResult<FuelEntry>> {
   const { data, error } = await supabase
     .from("fuel_logs")
-    .insert(entry)
+    .insert(mapToSnakeCase(entry as Record<string, unknown>))
     .select()
     .single();
 
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as FuelEntry };
+  return { success: true, data: mapRowsToCamelCase<FuelEntry>([data])[0] };
 }
 
 export async function getExpenses(vehicleId?: string): Promise<ServiceResult<ExpenseEntry[]>> {
@@ -30,36 +31,27 @@ export async function getExpenses(vehicleId?: string): Promise<ServiceResult<Exp
 
   const { data, error } = await query;
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as ExpenseEntry[] };
+  return { success: true, data: mapRowsToCamelCase<ExpenseEntry>(data ?? []) };
 }
 
 export async function addExpense(entry: Omit<ExpenseEntry, "id">): Promise<ServiceResult<ExpenseEntry>> {
   const { data, error } = await supabase
     .from("expenses")
-    .insert(entry)
+    .insert(mapToSnakeCase(entry as Record<string, unknown>))
     .select()
     .single();
 
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as ExpenseEntry };
+  return { success: true, data: mapRowsToCamelCase<ExpenseEntry>([data])[0] };
 }
 
 export async function getOperationalCost(
   vehicleId: string,
 ): Promise<ServiceResult<{ fuel: number; expenses: number; maintenance: number; total: number }>> {
   const [fuelResult, expenseResult, maintenanceResult] = await Promise.all([
-    supabase
-      .from("fuel_logs")
-      .select("total_cost")
-      .eq("vehicle_id", vehicleId),
-    supabase
-      .from("expenses")
-      .select("amount")
-      .eq("vehicle_id", vehicleId),
-    supabase
-      .from("maintenance_logs")
-      .select("cost")
-      .eq("vehicle_id", vehicleId),
+    supabase.from("fuel_logs").select("total_cost").eq("vehicle_id", vehicleId),
+    supabase.from("expenses").select("amount").eq("vehicle_id", vehicleId),
+    supabase.from("maintenance_logs").select("cost").eq("vehicle_id", vehicleId),
   ]);
 
   const fuel = (fuelResult.data ?? []).reduce((sum, e) => sum + (e.total_cost ?? 0), 0);

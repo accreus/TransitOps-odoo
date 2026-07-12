@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useMaintenanceStore, useVehicleStore } from "@/stores";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
@@ -31,12 +31,14 @@ const emptyLog: Omit<MaintenanceLog, "id"> = {
 };
 
 export default function MaintenancePage() {
-  const { logs, addLog, completeMaintenance } = useMaintenanceStore();
-  const vehicles = useVehicleStore((s) => s.vehicles);
+  const { logs, addLog, completeMaintenance, fetchAll } = useMaintenanceStore();
+  const { vehicles, fetchAll: fetchVehicles } = useVehicleStore();
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(emptyLog);
   const [partsInput, setPartsInput] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  useEffect(() => { fetchAll(); fetchVehicles(); }, [fetchAll, fetchVehicles]);
 
   const getVehicle = (id: string) => vehicles.find((v) => v.id === id);
 

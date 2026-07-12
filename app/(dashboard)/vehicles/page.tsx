@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useVehicleStore } from "@/stores";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ const emptyVehicle: Omit<Vehicle, "id"> = {
 };
 
 export default function VehiclesPage() {
-  const { vehicles, addVehicle, updateVehicle, removeVehicle } = useVehicleStore();
+  const { vehicles, addVehicle, updateVehicle, removeVehicle, fetchAll } = useVehicleStore();
   const [showModal, setShowModal] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
   const [form, setForm] = useState(emptyVehicle);
@@ -37,6 +37,8 @@ export default function VehiclesPage() {
   const [typeFilter, setTypeFilter] = useState("All Types");
   const [regionFilter, setRegionFilter] = useState("All Regions");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const filtered = useMemo(() => {
     return vehicles.filter((v) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useVehicleStore, useDriverStore, useTripStore } from "@/stores";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -27,6 +27,15 @@ export default function DashboardPage() {
   const vehicles = useVehicleStore((s) => s.vehicles);
   const drivers = useDriverStore((s) => s.drivers);
   const trips = useTripStore((s) => s.trips);
+  const fetchVehicles = useVehicleStore((s) => s.fetchAll);
+  const fetchDrivers = useDriverStore((s) => s.fetchAll);
+  const fetchTrips = useTripStore((s) => s.fetchAll);
+
+  useEffect(() => {
+    fetchVehicles();
+    fetchDrivers();
+    fetchTrips();
+  }, [fetchVehicles, fetchDrivers, fetchTrips]);
 
   const [regionFilter, setRegionFilter] = useState("All Regions");
   const [typeFilter, setTypeFilter] = useState("All Types");

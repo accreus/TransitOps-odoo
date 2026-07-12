@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { mapRowsToCamelCase, mapToSnakeCase } from "@/lib/db-mapper";
 import type { ServiceResult } from "@/lib/types";
 import type { Driver, DriverStatus } from "@/types";
 
@@ -15,7 +16,7 @@ export async function getDrivers(filters?: {
 
   const { data, error } = await query;
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as Driver[] };
+  return { success: true, data: mapRowsToCamelCase<Driver>(data ?? []) };
 }
 
 export async function getDriverById(
@@ -28,7 +29,7 @@ export async function getDriverById(
     .single();
 
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as Driver };
+  return { success: true, data: mapRowsToCamelCase<Driver>([data])[0] };
 }
 
 export async function getAvailableDrivers(): Promise<ServiceResult<Driver[]>> {
@@ -43,7 +44,7 @@ export async function getAvailableDrivers(): Promise<ServiceResult<Driver[]>> {
     .order("name");
 
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as Driver[] };
+  return { success: true, data: mapRowsToCamelCase<Driver>(data ?? []) };
 }
 
 export async function createDriver(
@@ -51,12 +52,12 @@ export async function createDriver(
 ): Promise<ServiceResult<Driver>> {
   const { data, error } = await supabase
     .from("drivers")
-    .insert(driver)
+    .insert(mapToSnakeCase(driver))
     .select()
     .single();
 
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as Driver };
+  return { success: true, data: mapRowsToCamelCase<Driver>([data])[0] };
 }
 
 export async function updateDriver(
@@ -65,13 +66,13 @@ export async function updateDriver(
 ): Promise<ServiceResult<Driver>> {
   const { data, error } = await supabase
     .from("drivers")
-    .update(updates)
+    .update(mapToSnakeCase(updates))
     .eq("id", id)
     .select()
     .single();
 
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data as Driver };
+  return { success: true, data: mapRowsToCamelCase<Driver>([data])[0] };
 }
 
 export async function deleteDriver(

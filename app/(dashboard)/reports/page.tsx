@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useVehicleStore, useTripStore, useFuelExpenseStore } from "@/stores";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
@@ -33,10 +33,12 @@ const chartTooltipStyle = {
 };
 
 export default function ReportsPage() {
-  const vehicles = useVehicleStore((s) => s.vehicles);
-  const trips = useTripStore((s) => s.trips);
-  const { fuelEntries, expenses } = useFuelExpenseStore();
+  const { vehicles, fetchAll: fetchVehicles } = useVehicleStore();
+  const { trips, fetchAll: fetchTrips } = useTripStore();
+  const { fuelEntries, expenses, fetchAll: fetchFuelExpenses } = useFuelExpenseStore();
   const [activeChart, setActiveChart] = useState<"utilization" | "fuel" | "cost" | "roi">("utilization");
+
+  useEffect(() => { fetchVehicles(); fetchTrips(); fetchFuelExpenses(); }, [fetchVehicles, fetchTrips, fetchFuelExpenses]);
 
   const utilizationData = useMemo(() => {
     const statusCounts = vehicles.reduce(

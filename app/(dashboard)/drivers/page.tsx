@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useDriverStore } from "@/stores";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
@@ -29,13 +29,15 @@ const emptyDriver: Omit<Driver, "id"> = {
 };
 
 export default function DriversPage() {
-  const { drivers, addDriver, updateDriver, removeDriver } = useDriverStore();
+  const { drivers, addDriver, updateDriver, removeDriver, fetchAll } = useDriverStore();
   const [showModal, setShowModal] = useState(false);
   const [editingDriver, setEditingDriver] = useState<Driver | null>(null);
   const [form, setForm] = useState(emptyDriver);
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [regionFilter, setRegionFilter] = useState("All Regions");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const filtered = useMemo(() => {
     return drivers.filter((d) => {

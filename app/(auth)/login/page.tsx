@@ -37,7 +37,7 @@ export default function LoginPage() {
       return;
     }
 
-    const success = login(email, password);
+    const success = await login(email, password);
     if (success) {
       router.push("/dashboard");
     } else {
@@ -51,7 +51,7 @@ export default function LoginPage() {
     setPassword("demo");
     setLoading(true);
     await new Promise((r) => setTimeout(r, 400));
-    login(demoEmail, "demo");
+    await login(demoEmail, "demo");
     router.push("/dashboard");
   };
 

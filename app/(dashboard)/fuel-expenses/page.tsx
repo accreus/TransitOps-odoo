@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useFuelExpenseStore, useVehicleStore } from "@/stores";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -20,11 +20,13 @@ const expenseCategories: { value: ExpenseEntry["category"]; label: string }[] = 
 ];
 
 export default function FuelExpensesPage() {
-  const { fuelEntries, expenses, addFuelEntry, addExpense } = useFuelExpenseStore();
-  const vehicles = useVehicleStore((s) => s.vehicles);
+  const { fuelEntries, expenses, addFuelEntry, addExpense, fetchAll } = useFuelExpenseStore();
+  const { vehicles, fetchAll: fetchVehicles } = useVehicleStore();
   const [activeTab, setActiveTab] = useState<"fuel" | "expenses" | "summary">("fuel");
   const [showFuelModal, setShowFuelModal] = useState(false);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
+
+  useEffect(() => { fetchAll(); fetchVehicles(); }, [fetchAll, fetchVehicles]);
 
   const [fuelForm, setFuelForm] = useState<Omit<FuelEntry, "id" | "totalCost">>({
     vehicleId: "",

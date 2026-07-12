@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useTripStore, useVehicleStore, useDriverStore } from "@/stores";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { Input, Select, Textarea } from "@/components/ui/form-elements";
 import type { Trip, TripStatus } from "@/types";
-import { Plus, Pencil, Send, CheckCircle, XCircle, ArrowRight, Filter } from "lucide-react";
+import { Plus, Pencil, Send, CheckCircle, XCircle, ArrowRight, Filter, Truck } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const statusOptions = ["All Status", "draft", "dispatched", "in_transit", "completed", "cancelled"];
@@ -37,9 +37,9 @@ const emptyTrip: Omit<Trip, "id" | "tripNumber" | "createdAt"> = {
 };
 
 export default function TripsPage() {
-  const { trips, addTrip, updateTrip, removeTrip, dispatchTrip, completeTrip, cancelTrip } = useTripStore();
-  const vehicles = useVehicleStore((s) => s.vehicles);
-  const drivers = useDriverStore((s) => s.drivers);
+  const { trips, addTrip, updateTrip, removeTrip, dispatchTrip, departTrip, completeTrip, cancelTrip, fetchAll } = useTripStore();
+  const { vehicles, fetchAll: fetchVehicles } = useVehicleStore();
+  const { drivers, fetchAll: fetchDrivers } = useDriverStore();
 
   const [showModal, setShowModal] = useState(false);
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null);
@@ -47,6 +47,8 @@ export default function TripsPage() {
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [showDispatch, setShowDispatch] = useState<Trip | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
+  useEffect(() => { fetchAll(); fetchVehicles(); fetchDrivers(); }, [fetchAll, fetchVehicles, fetchDrivers]);
 
   const availableVehicles = useMemo(
     () => vehicles.filter((v) => v.status !== "in_shop" && v.status !== "retired"),
@@ -168,6 +170,13 @@ export default function TripsPage() {
                       <Send className="h-3 w-3" aria-hidden="true" />
                       <span className="hidden sm:inline">Dispatch</span>
                       <span className="sm:hidden">Send</span>
+                    </Button>
+                  )}
+                  {trip.status === "dispatched" && (
+                    <Button size="sm" onClick={() => departTrip(trip.id)}>
+                      <Truck className="h-3 w-3" aria-hidden="true" />
+                      <span className="hidden sm:inline">Depart</span>
+                      <span className="sm:hidden">Go</span>
                     </Button>
                   )}
                   {trip.status === "in_transit" && (
