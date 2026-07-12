@@ -1,0 +1,11 @@
+vehicle_id,trip_id,liters,cost_per_liter,cost,odometer_reading,station,date
+a1b2c3d4-e5f6-7890-abcd-ef1234567890,,45.5,102.50,4663.75,44800,HP Petrol Pump Mumbai,2026-06-01
+a1b2c3d4-e5f6-7890-abcd-ef1234567891,,52.0,101.80,5293.60,21500,Indian Oil Delhi,2026-06-05
+a1b2c3d4-e5f6-7890-abcd-ef1234567892,,68.3,103.20,7048.56,30800,Bharat Petroleum Bangalore,2026-07-10
+a1b2c3d4-e5f6-7890-abcd-ef1234567893,,38.0,102.00,3876.00,8500,Reliance Fresh Ahmedabad,2026-07-05
+a1b2c3d4-e5f6-7890-abcd-ef1234567894,,22.5,101.50,2283.75,56200,Shell Kolkata,2026-06-10
+a1b2c3d4-e5f6-7890-abcd-ef1234567895,,75.0,104.00,7800.00,43000,HP Petrol Pump Chennai,2026-06-15
+a1b2c3d4-e5f6-7890-abcd-ef1234567896,,60.2,102.80,6188.56,28200,Indian Oil Hyderabad,2026-06-20
+a1b2c3d4-e5f6-7890-abcd-ef1234567897,,18.5,101.90,1885.15,91500,Bharat Petroleum Lucknow,2026-07-01
+a1b2c3d4-e5f6-7890-abcd-ef1234567898,,55.0,103.50,5692.50,28000,Shell Pune,2026-07-08
+a1b2c3d4-e5f6-7890-abcd-ef1234567899,,42.0,102.20,4292.40,77800,HP Petrol Pump Delhi,2026-06-25

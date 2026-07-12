@@ -1,0 +1,13 @@
+registration_number,model,type,make,year,region,max_load_capacity,odometer,acquisition_cost,status,last_service_date,fuel_type
+MH-12-AB-1234,Tata Prima 2528,truck,Tata,2022,Northeast,25000,45200,1850000,Available,2026-03-15,diesel
+MH-14-CD-5678,Ashok Leyland Dost,van,Ashok Leyland,2023,Southeast,3500,22100,850000,Available,2026-01-20,diesel
+DL-09-EF-9012,BharatBenz 1618,truck,BharatBenz,2021,Midwest,16000,78400,2200000,On Trip,2025-12-10,diesel
+KA-05-GH-3456,Force Motors Traveller,van,Force Motors,2024,West,2000,8900,1200000,Available,2026-06-01,diesel
+GJ-06-IJ-7890,Tata Ultra 1518,truck,Tata,2023,Southwest,15000,31200,1650000,In Shop,2026-05-20,diesel
+TN-07-KL-2345,Eicher Pro 2049,trailer,Eicher,2022,Northeast,20000,56700,1950000,Available,2026-02-28,diesel
+RJ-14-MN-6789,BharatBenz 2528,truck,BharatBenz,2024,Southeast,25000,12300,2800000,Available,2026-04-10,diesel
+UP-32-OP-0123,Tata 407,tanker,Tata,2021,Midwest,10000,92100,1400000,Retired,2025-08-15,diesel
+MP-09-QR-4567,Ashok Leyland Viking,truck,Ashok Leyland,2023,West,18000,28700,2100000,Available,2026-05-01,diesel
+CH-01-ST-8901,Tata Ace Gold,van,Tata,2024,Northeast,1500,5200,650000,Available,2026-07-01,petrol
+PB-65-UV-2345,Force Traveller 2620,van,Force Motors,2022,Southwest,2600,44500,980000,On Trip,2026-03-01,diesel
+HR-72-WX-6789,BharatBenz 1917,truck,BharatBenz,2023,Midwest,19000,35600,1750000,Available,2026-04-15,diesel
