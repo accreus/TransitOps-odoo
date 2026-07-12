@@ -79,7 +79,7 @@ export const useMaintenanceStore = create<MaintenanceState>((set, get) => ({
     // Mark maintenance as completed
     await supabase
       .from("maintenance_logs")
-      .update({ status: "completed", completed_date: new Date().toISOString().split("T")[0] })
+      .update({ state: "closed", completed_date: new Date().toISOString().split("T")[0] })
       .eq("id", id);
 
     get().fetchAll();

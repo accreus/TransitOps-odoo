@@ -140,6 +140,12 @@ export function toSnakeCase<T extends Record<string, unknown>>(obj: T): Record<s
     if (key === "totalCost" || key === "amount") {
       snakeKey = "cost";
     }
+    if (key === "status" && ("mechanic" in obj || "partsReplaced" in obj || "description" in obj)) {
+      snakeKey = "state";
+      const val = value === "completed" ? "closed" : "open";
+      result[snakeKey] = val;
+      continue;
+    }
     result[snakeKey] = MAPPED_FIELDS.has(snakeKey) ? mapValue(snakeKey, value) : value;
   }
   return result;
@@ -155,6 +161,12 @@ export function toCamelCase<T extends Record<string, unknown>>(obj: T): Record<s
       } else if ("category" in obj || "receipt_url" in obj) {
         camelKey = "amount";
       }
+    }
+    if (key === "state" && ("mechanic" in obj || "parts_replaced" in obj || "description" in obj)) {
+      camelKey = "status";
+      const val = value === "closed" ? "completed" : "in_progress";
+      result[camelKey] = val;
+      continue;
     }
     const val = MAPPED_FIELDS.has(key) ? reverseMapValue(key, value) : value;
     result[camelKey] = val;

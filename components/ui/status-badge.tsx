@@ -67,6 +67,7 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status, className, animate = false }: StatusBadgeProps) {
+  if (!status) return null;
   const config = statusConfig[status] || { label: status.toUpperCase(), className: "" };
 
   return (
