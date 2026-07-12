@@ -65,16 +65,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error || !data.user) {
-      // Fallback to mock users for demo (only in development)
-      const { mockUsers } = await import("@/data/mock-data");
-      const found = mockUsers.find((u) => u.email === email);
-      if (found) {
-        set({ user: found, isAuthenticated: true });
-        return true;
-      }
-      const fallback = mockUsers[0];
-      set({ user: fallback, isAuthenticated: true });
-      return true;
+      return false;
     }
 
     const { data: profile } = await supabase

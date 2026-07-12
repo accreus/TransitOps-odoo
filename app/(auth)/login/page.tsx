@@ -8,14 +8,6 @@ import { Truck, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { useAuthStore } from "@/stores";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/form-elements";
-import type { UserRole } from "@/types";
-
-const demoAccounts = [
-  { email: "marcus@transitops.com", role: "Fleet Manager" as UserRole },
-  { email: "sarah@transitops.com", role: "Driver" as UserRole },
-  { email: "james@transitops.com", role: "Safety Officer" as UserRole },
-  { email: "emily@transitops.com", role: "Financial Analyst" as UserRole },
-];
 
 export default function LoginPage() {
   const router = useRouter();
@@ -58,15 +50,6 @@ export default function LoginPage() {
       setError("Invalid credentials. Try a demo account.");
       setLoading(false);
     }
-  };
-
-  const quickLogin = async (demoEmail: string) => {
-    setEmail(demoEmail);
-    setPassword("demo");
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 400));
-    await login(demoEmail, "demo");
-    router.push("/dashboard");
   };
 
   return (
@@ -138,25 +121,6 @@ export default function LoginPage() {
               Create one
             </Link>
           </p>
-        </div>
-
-        {/* Quick access */}
-        <div className="mt-6 animate-stagger-in" style={{ animationDelay: "200ms" }}>
-          <p className="text-xs text-center text-muted-foreground mb-3 font-display uppercase tracking-wider">
-            Quick Access — Demo Accounts
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            {demoAccounts.map((account) => (
-              <button
-                key={account.email}
-                onClick={() => quickLogin(account.email)}
-                className="text-left p-3 bg-card border border-border rounded-sm hover:border-primary/40 hover:bg-primary/5 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <p className="text-xs font-semibold text-foreground">{account.role}</p>
-                <p className="text-[0.65rem] text-muted-foreground font-mono mt-0.5">{account.email}</p>
-              </button>
-            ))}
-          </div>
         </div>
       </div>
     </div>
