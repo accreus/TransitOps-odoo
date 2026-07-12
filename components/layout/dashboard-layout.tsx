@@ -13,15 +13,25 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const loading = useAuthStore((s) => s.loading);
+  const initialize = useAuthStore((s) => s.initialize);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    initialize();
+  }, [initialize]);
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
       router.push("/login");
     }
-  }, [isAuthenticated, router]);
+  }, [loading, isAuthenticated, router]);
 
-  if (!user) return null;
+  if (loading || !user) return (
+    <div className="flex h-screen items-center justify-center bg-background">
+      <div className="text-sm text-muted-foreground font-mono animate-pulse">LOADING...</div>
+    </div>
+  );
 
   return (
     <div className="flex h-screen overflow-hidden">
