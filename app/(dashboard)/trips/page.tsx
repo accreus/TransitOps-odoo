@@ -33,7 +33,7 @@ const emptyTrip: Omit<Trip, "id" | "tripNumber" | "createdAt"> = {
   actualArrival: null,
   distanceKm: 0,
   fuelUsedLiters: 0,
-  totalCost: 0,
+  revenue: 0,
 };
 
 export default function TripsPage() {
@@ -171,7 +171,7 @@ export default function TripsPage() {
                     </Button>
                   )}
                   {trip.status === "in_transit" && (
-                    <Button size="sm" onClick={() => completeTrip(trip.id, trip.fuelUsedLiters, trip.totalCost)}>
+                    <Button size="sm" onClick={() => completeTrip(trip.id, trip.fuelUsedLiters, trip.revenue)}>
                       <CheckCircle className="h-3 w-3" aria-hidden="true" />
                       Done
                     </Button>
@@ -244,7 +244,7 @@ export default function TripsPage() {
                 </div>
               </div>
 
-              {trip.status === "completed" && trip.totalCost > 0 && (
+              {trip.status === "completed" && trip.revenue > 0 && (
                 <div className="mt-3 pt-3 border-t border-border/50 grid grid-cols-2 sm:flex sm:items-center gap-1 sm:gap-4 text-xs">
                   <div className="flex items-center gap-1.5">
                     <span className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Fuel:</span>
@@ -252,7 +252,7 @@ export default function TripsPage() {
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Cost:</span>
-                    <span className="mono-data text-foreground font-semibold">${trip.totalCost.toLocaleString()}</span>
+                    <span className="mono-data text-foreground font-semibold">${trip.revenue.toLocaleString()}</span>
                   </div>
                 </div>
               )}

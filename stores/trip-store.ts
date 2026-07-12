@@ -11,7 +11,7 @@ interface TripState {
   removeTrip: (id: string) => void;
   setStatus: (id: string, status: TripStatus) => void;
   dispatchTrip: (id: string) => void;
-  completeTrip: (id: string, fuelUsed: number, totalCost: number) => void;
+  completeTrip: (id: string, fuelUsed: number, revenue: number) => void;
   cancelTrip: (id: string) => void;
 }
 
@@ -36,11 +36,11 @@ export const useTripStore = create<TripState>((set) => ({
           : t
       ),
     })),
-  completeTrip: (id, fuelUsed, totalCost) =>
+  completeTrip: (id, fuelUsed, revenue) =>
     set((s) => ({
       trips: s.trips.map((t) =>
         t.id === id
-          ? { ...t, status: "completed" as TripStatus, actualArrival: new Date().toISOString(), fuelUsedLiters: fuelUsed, totalCost }
+          ? { ...t, status: "completed" as TripStatus, actualArrival: new Date().toISOString(), fuelUsedLiters: fuelUsed, revenue }
           : t
       ),
     })),

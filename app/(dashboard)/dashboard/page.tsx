@@ -20,7 +20,7 @@ import {
 import Link from "next/link";
 
 const regions = ["All Regions", "Northeast", "Southeast", "Midwest", "West", "Southwest"];
-const vehicleTypes = ["All Types", "truck", "van", "trailer", " tanker"];
+const vehicleTypes = ["All Types", "truck", "van", "trailer", "tanker"];
 const vehicleStatuses = ["All Status", "available", "on_trip", "in_shop", "retired"];
 
 export default function DashboardPage() {

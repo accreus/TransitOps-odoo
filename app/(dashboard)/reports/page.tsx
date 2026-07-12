@@ -93,12 +93,12 @@ export default function ReportsPage() {
 
   const vehicleRoiData = useMemo(() => {
     const completedTrips = trips.filter((t) => t.status === "completed");
-    const vehicleStats: Record<string, { trips: number; totalCost: number; totalDistance: number }> = {};
+    const vehicleStats: Record<string, { trips: number; revenue: number; totalDistance: number }> = {};
 
     completedTrips.forEach((t) => {
-      if (!vehicleStats[t.vehicleId]) vehicleStats[t.vehicleId] = { trips: 0, totalCost: 0, totalDistance: 0 };
+      if (!vehicleStats[t.vehicleId]) vehicleStats[t.vehicleId] = { trips: 0, revenue: 0, totalDistance: 0 };
       vehicleStats[t.vehicleId].trips += 1;
-      vehicleStats[t.vehicleId].totalCost += t.totalCost;
+      vehicleStats[t.vehicleId].revenue += t.revenue;
       vehicleStats[t.vehicleId].totalDistance += t.distanceKm;
     });
 
@@ -108,8 +108,8 @@ export default function ReportsPage() {
         return {
           name: vehicle?.regNumber || vId,
           trips: stats.trips,
-          costPerKm: stats.totalDistance > 0 ? Math.round((stats.totalCost / stats.totalDistance) * 100) / 100 : 0,
-          totalCost: stats.totalCost,
+          costPerKm: stats.totalDistance > 0 ? Math.round((stats.revenue / stats.totalDistance) * 100) / 100 : 0,
+          revenue: stats.revenue,
           distance: stats.totalDistance,
         };
       })

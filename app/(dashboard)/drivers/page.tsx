@@ -22,6 +22,7 @@ const emptyDriver: Omit<Driver, "id"> = {
   email: "",
   status: "available",
   region: "Northeast",
+  safetyScore: 0,
   assignedVehicleId: null,
   joinDate: new Date().toISOString().split("T")[0],
   totalTrips: 0,

@@ -10,7 +10,7 @@ import type { Vehicle, VehicleStatus, VehicleType } from "@/types";
 import { Plus, Pencil, Trash2, Filter } from "lucide-react";
 
 const statusOptions = ["All Status", "available", "on_trip", "in_shop", "retired"];
-const typeOptions = ["All Types", "truck", "van", "trailer", " tanker"];
+const typeOptions = ["All Types", "truck", "van", "trailer", "tanker"];
 const regionOptions = ["All Regions", "Northeast", "Southeast", "Midwest", "West", "Southwest"];
 
 const emptyVehicle: Omit<Vehicle, "id"> = {
@@ -22,6 +22,7 @@ const emptyVehicle: Omit<Vehicle, "id"> = {
   status: "available",
   region: "Northeast",
   maxLoadKg: 0,
+  acquisitionCost: 0,
   currentOdometer: 0,
   lastServiceDate: new Date().toISOString().split("T")[0],
   fuelType: "diesel",
@@ -223,7 +224,7 @@ export default function VehiclesPage() {
               { value: "truck", label: "Truck" },
               { value: "van", label: "Van" },
               { value: "trailer", label: "Trailer" },
-              { value: " tanker", label: "Tanker" },
+              { value: "tanker", label: "Tanker" },
             ]}
           />
           <Input

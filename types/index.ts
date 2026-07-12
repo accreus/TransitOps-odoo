@@ -1,7 +1,7 @@
 export type UserRole = "fleet_manager" | "driver" | "safety_officer" | "financial_analyst";
 
 export type VehicleStatus = "available" | "on_trip" | "in_shop" | "retired";
-export type VehicleType = "truck" | "van" | "trailer" | " tanker";
+export type VehicleType = "truck" | "van" | "trailer" | "tanker";
 
 export type DriverStatus = "available" | "on_trip" | "off_duty" | "suspended";
 
@@ -19,6 +19,7 @@ export interface Vehicle {
   status: VehicleStatus;
   region: string;
   maxLoadKg: number;
+  acquisitionCost: number;
   currentOdometer: number;
   lastServiceDate: string;
   fuelType: "diesel" | "petrol" | "electric" | "cng";
@@ -33,6 +34,7 @@ export interface Driver {
   email: string;
   status: DriverStatus;
   region: string;
+  safetyScore: number;
   assignedVehicleId: string | null;
   joinDate: string;
   totalTrips: number;
@@ -54,7 +56,7 @@ export interface Trip {
   actualArrival: string | null;
   distanceKm: number;
   fuelUsedLiters: number;
-  totalCost: number;
+  revenue: number;
   createdAt: string;
 }
 
