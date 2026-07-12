@@ -12,6 +12,7 @@ import { ShortcutsProvider } from "@/components/ui/shortcuts-provider";
 import { NotificationsDropdown } from "./notifications-dropdown";
 import { MobileBottomNav } from "./mobile-bottom-nav";
 import { SystemFooter } from "./system-footer";
+import { LiveClock } from "@/components/ui/live-clock";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -80,6 +81,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <div className="hidden md:block">
+              <LiveClock />
+            </div>
             <NotificationsDropdown />
             <div className="h-8 w-8 rounded-sm bg-primary/10 border border-primary/30 flex items-center justify-center">
               <span className="text-xs font-bold text-primary">{user.avatar}</span>
