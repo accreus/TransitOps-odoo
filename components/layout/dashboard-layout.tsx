@@ -11,6 +11,7 @@ import { ToastProvider } from "@/components/ui/toast";
 import { ShortcutsProvider } from "@/components/ui/shortcuts-provider";
 import { NotificationsDropdown } from "./notifications-dropdown";
 import { MobileBottomNav } from "./mobile-bottom-nav";
+import { SystemFooter } from "./system-footer";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -91,6 +92,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+      <SystemFooter />
     </div>
     <MobileBottomNav />
     </ShortcutsProvider>
