@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores";
 import { Sidebar } from "./sidebar";
-import { Menu, Bell, Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ToastProvider } from "@/components/ui/toast";
 import { ShortcutsProvider } from "@/components/ui/shortcuts-provider";
+import { NotificationsDropdown } from "./notifications-dropdown";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -77,13 +78,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              className="relative p-2 text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              aria-label="Notifications"
-            >
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-destructive rounded-full" aria-label="3 unread notifications" />
-            </button>
+            <NotificationsDropdown />
             <div className="h-8 w-8 rounded-sm bg-primary/10 border border-primary/30 flex items-center justify-center">
               <span className="text-xs font-bold text-primary">{user.avatar}</span>
             </div>
