@@ -1,4 +1,5 @@
 import { createClient } from './supabase/server'
+import { createAdminClient } from './supabase/admin'
 import { toFrontendRole, toDbRole, type FrontendRole } from './constants'
 
 export interface AuthUser {
@@ -32,7 +33,9 @@ export async function signUp({ email, password, name, role }: SignupCredentials)
   if (authError) throw authError
   if (!authData.user) throw new Error('User creation failed')
 
-  const { data: userData, error: userError } = await supabase
+  // Use admin client to bypass RLS — the user doesn't exist in users table yet
+  const admin = createAdminClient()
+  const { data: userData, error: userError } = await admin
     .from('users')
     .insert({
       id: authData.user.id,

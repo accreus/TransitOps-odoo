@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { signUp } from "@/lib/auth";
 import { signupSchema } from "@/lib/validation";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -29,14 +31,14 @@ export async function POST(request: NextRequest) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Signup error:", message);
 
-    if (message.includes("already registered")) {
+    if (message.includes("already")) {
       return NextResponse.json(
         { error: "An account with this email already exists", field: "email" },
         { status: 409 }
       );
     }
 
-    if (message.includes("Password should")) {
+    if (message.includes("Password")) {
       return NextResponse.json(
         { error: "Password must be at least 6 characters", field: "password" },
         { status: 400 }

@@ -110,6 +110,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return { success: false, error: "User creation failed" };
     }
 
+    // Insert profile — works because RLS allows auth.uid() = id inserts
     const { error: profileError } = await supabase
       .from("users")
       .insert({
@@ -123,6 +124,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return { success: false, error: profileError.message };
     }
 
+    // If we got a session (email confirmation disabled), set auth state
     if (data.session) {
       const { data: profile } = await supabase
         .from("users")
