@@ -2,7 +2,23 @@
 
 import { create } from "zustand";
 import { createClient } from "@/lib/supabase/client";
+import { toFrontendRole, type FrontendRole } from "@/lib/constants";
 import type { User, UserRole } from "@/types";
+
+function normalizeRole(dbRole: string): UserRole {
+  return toFrontendRole(dbRole) as UserRole;
+}
+
+function profileToUser(profile: Record<string, unknown>): User {
+  return {
+    id: profile.id as string,
+    name: profile.name as string,
+    email: profile.email as string,
+    role: normalizeRole(profile.role as string),
+    avatar: (profile.avatar as string) ??
+      (profile.name as string).split(" ").map((n: string) => n[0]).join(""),
+  };
+}
 
 interface AuthState {
   user: User | null;
@@ -32,13 +48,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       if (profile) {
         set({
-          user: {
-            id: profile.id,
-            name: profile.name,
-            email: profile.email,
-            role: profile.role,
-            avatar: profile.avatar ?? profile.name.split(" ").map((n: string) => n[0]).join(""),
-          },
+          user: profileToUser(profile),
           isAuthenticated: true,
           loading: false,
         });
@@ -54,7 +64,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error || !data.user) {
-      // Fallback to mock users for demo
+      // Fallback to mock users for demo (only in development)
       const { mockUsers } = await import("@/data/mock-data");
       const found = mockUsers.find((u) => u.email === email);
       if (found) {
@@ -74,13 +84,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     if (profile) {
       set({
-        user: {
-          id: profile.id,
-          name: profile.name,
-          email: profile.email,
-          role: profile.role,
-          avatar: profile.avatar ?? profile.name.split(" ").map((n: string) => n[0]).join(""),
-        },
+        user: profileToUser(profile),
         isAuthenticated: true,
       });
       return true;
