@@ -123,7 +123,7 @@ export default function TripsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-end gap-3">
-        <div className="w-44">
+        <div className="w-full sm:w-44">
           <Select
             label="Status"
             value={statusFilter}
@@ -143,35 +143,37 @@ export default function TripsPage() {
           return (
             <div
               key={trip.id}
-              className="bg-card border border-border rounded-sm p-4 animate-stagger-in"
+              className="bg-card border border-border rounded-sm p-3 sm:p-4 animate-stagger-in"
               style={{ animationDelay: `${i * 40}ms` }}
             >
               {/* Header */}
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <span className="mono-data font-bold text-foreground">{trip.tripNumber}</span>
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-3 mb-3">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="mono-data font-bold text-foreground text-sm sm:text-base">{trip.tripNumber}</span>
                     <StatusBadge status={trip.status} />
                   </div>
-                  <div className="flex items-center gap-2 mt-1.5 text-sm text-muted-foreground">
-                    <span>{trip.source}</span>
-                    <ArrowRight className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                    <span>{trip.destination}</span>
-                    <span className="text-xs text-muted-foreground/60">•</span>
-                    <span className="mono-data text-xs">{trip.distanceKm} km</span>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1 text-xs sm:text-sm text-muted-foreground">
+                    <span className="truncate max-w-[120px] sm:max-w-none">{trip.source}</span>
+                    <ArrowRight className="h-3 w-3 text-primary shrink-0" aria-hidden="true" />
+                    <span className="truncate max-w-[120px] sm:max-w-none">{trip.destination}</span>
+                    <span className="text-muted-foreground/60 hidden sm:inline">•</span>
+                    <span className="mono-data text-xs hidden sm:inline">{trip.distanceKm} km</span>
                   </div>
+                  <span className="mono-data text-xs text-muted-foreground sm:hidden mt-0.5 block">{trip.distanceKm} km</span>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 flex-wrap shrink-0">
                   {trip.status === "draft" && (
                     <Button size="sm" onClick={() => setShowDispatch(trip)}>
                       <Send className="h-3 w-3" aria-hidden="true" />
-                      Dispatch
+                      <span className="hidden sm:inline">Dispatch</span>
+                      <span className="sm:hidden">Send</span>
                     </Button>
                   )}
                   {trip.status === "in_transit" && (
                     <Button size="sm" onClick={() => completeTrip(trip.id, trip.fuelUsedLiters, trip.totalCost)}>
                       <CheckCircle className="h-3 w-3" aria-hidden="true" />
-                      Complete
+                      Done
                     </Button>
                   )}
                   {(trip.status === "draft" || trip.status === "dispatched") && (
@@ -192,26 +194,26 @@ export default function TripsPage() {
 
               {/* Lifecycle stepper */}
               {trip.status !== "cancelled" && (
-                <div className="flex items-center gap-1 mb-3">
+                <div className="flex items-center gap-1 mb-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
                   {tripSteps.map((step, si) => (
-                    <div key={step.key} className="flex items-center gap-1">
+                    <div key={step.key} className="flex items-center gap-1 shrink-0">
                       <div
                         className={cn(
-                          "flex items-center gap-1.5 px-2 py-1 rounded-sm text-[0.65rem] font-display font-bold uppercase tracking-wider",
+                          "flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-1 rounded-sm text-[0.55rem] sm:text-[0.65rem] font-display font-bold uppercase tracking-wider whitespace-nowrap",
                           si <= currentStep
                             ? "bg-primary/10 text-primary border border-primary/30"
                             : "bg-secondary text-muted-foreground border border-border"
                         )}
                       >
                         <span className={cn(
-                          "h-1.5 w-1.5 rounded-full",
+                          "h-1.5 w-1.5 rounded-full shrink-0",
                           si < currentStep ? "bg-primary" : si === currentStep ? "bg-primary animate-pulse" : "bg-muted-foreground/30"
                         )} aria-hidden="true" />
                         {step.label}
                       </div>
                       {si < tripSteps.length - 1 && (
                         <div className={cn(
-                          "w-4 h-px",
+                          "w-3 sm:w-4 h-px shrink-0",
                           si < currentStep ? "bg-primary" : "bg-border"
                         )} aria-hidden="true" />
                       )}
@@ -221,33 +223,37 @@ export default function TripsPage() {
               )}
 
               {/* Details row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs">
                 <div>
                   <p className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Vehicle</p>
-                  <p className="mono-data text-foreground mt-0.5">{vehicle?.regNumber || "—"}</p>
+                  <p className="mono-data text-foreground mt-0.5 truncate">{vehicle?.regNumber || "—"}</p>
                 </div>
                 <div>
                   <p className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Driver</p>
-                  <p className="text-foreground mt-0.5">{driver?.name || "—"}</p>
+                  <p className="text-foreground mt-0.5 truncate">{driver?.name || "—"}</p>
                 </div>
                 <div>
                   <p className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Cargo</p>
-                  <p className="text-foreground mt-0.5 truncate">{trip.cargoDescription}</p>
+                  <p className="text-foreground mt-0.5 truncate">{trip.cargoDescription || "—"}</p>
                 </div>
                 <div>
                   <p className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Weight</p>
-                  <p className={cn("mono-data mt-0.5", trip.cargoWeightKg > (vehicle?.maxLoadKg || Infinity) ? "text-destructive" : "text-foreground")}>
+                  <p className={cn("mono-data mt-0.5 truncate", trip.cargoWeightKg > (vehicle?.maxLoadKg || Infinity) ? "text-destructive" : "text-foreground")}>
                     {trip.cargoWeightKg.toLocaleString()} / {vehicle?.maxLoadKg.toLocaleString() || "—"} kg
                   </p>
                 </div>
               </div>
 
               {trip.status === "completed" && trip.totalCost > 0 && (
-                <div className="mt-3 pt-3 border-t border-border/50 flex items-center gap-4 text-xs">
-                  <span className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Fuel Used:</span>
-                  <span className="mono-data text-foreground">{trip.fuelUsedLiters} L</span>
-                  <span className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Total Cost:</span>
-                  <span className="mono-data text-foreground">${trip.totalCost.toLocaleString()}</span>
+                <div className="mt-3 pt-3 border-t border-border/50 grid grid-cols-2 sm:flex sm:items-center gap-1 sm:gap-4 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Fuel:</span>
+                    <span className="mono-data text-foreground">{trip.fuelUsedLiters} L</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Cost:</span>
+                    <span className="mono-data text-foreground font-semibold">${trip.totalCost.toLocaleString()}</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -269,7 +275,7 @@ export default function TripsPage() {
         title={editingTrip ? "Edit Trip" : "Create New Trip"}
         size="lg"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Select
             label="Vehicle"
             value={form.vehicleId}

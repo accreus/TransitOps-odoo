@@ -90,7 +90,7 @@ export default function MaintenancePage() {
       <div className="hazard-divider" />
 
       {/* Filter tabs */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {["all", "in_progress", "scheduled", "completed"].map((status) => (
           <button
             key={status}
@@ -123,18 +123,18 @@ export default function MaintenancePage() {
               )}
               style={{ animationDelay: `${i * 40}ms` }}
             >
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                 <div className="flex items-start gap-3">
                   <div className={cn(
-                    "p-2 rounded-sm",
+                    "p-2 rounded-sm shrink-0",
                     log.status === "completed" ? "bg-status-available/10 text-status-available" :
                     log.status === "in_progress" ? "bg-primary/10 text-primary" :
                     "bg-secondary text-muted-foreground"
                   )}>
                     <TypeIcon className="h-4 w-4" aria-hidden="true" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="mono-data text-sm font-bold text-foreground">{vehicle?.regNumber || "—"}</span>
                       <StatusBadge status={log.status} />
                       <span className={cn(
@@ -150,14 +150,14 @@ export default function MaintenancePage() {
                   </div>
                 </div>
                 {log.status === "in_progress" && (
-                  <Button size="sm" onClick={() => completeMaintenance(log.id)}>
+                  <Button size="sm" onClick={() => completeMaintenance(log.id)} className="shrink-0">
                     <CheckCircle className="h-3 w-3" aria-hidden="true" />
                     Mark Complete
                   </Button>
                 )}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs ml-11">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-xs ml-0 sm:ml-11">
                 <div>
                   <p className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Date</p>
                   <p className="mono-data text-foreground mt-0.5">{format(new Date(log.date), "dd MMM yyyy")}</p>
@@ -177,7 +177,7 @@ export default function MaintenancePage() {
               </div>
 
               {log.completedDate && (
-                <div className="ml-11 mt-2 text-xs text-status-available font-mono">
+                <div className="sm:ml-11 mt-2 text-xs text-status-available font-mono">
                   Completed: {format(new Date(log.completedDate), "dd MMM yyyy")}
                 </div>
               )}
@@ -201,7 +201,7 @@ export default function MaintenancePage() {
         description="Log a new maintenance event. Vehicle status will update to IN SHOP."
         size="lg"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Select
             label="Vehicle"
             value={form.vehicleId}

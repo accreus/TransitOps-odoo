@@ -68,6 +68,7 @@ export function Modal({ open, onClose, title, description, children, size = "md"
         className={cn(
           "relative z-10 w-full mx-4 bg-card border border-border rounded-sm",
           "shadow-xl animate-stagger-in",
+          "max-w-[calc(100vw-2rem)]",
           sizeClasses[size]
         )}
       >

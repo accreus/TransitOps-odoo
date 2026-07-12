@@ -102,7 +102,7 @@ export default function FuelExpensesPage() {
             TOTAL FUEL: ${totalFuelCost.toLocaleString()} • TOTAL EXPENSES: ${totalExpenseCost.toLocaleString()}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button onClick={() => setShowFuelModal(true)} variant="secondary">
             <Fuel className="h-4 w-4" aria-hidden="true" />
             Add Fuel
@@ -117,7 +117,7 @@ export default function FuelExpensesPage() {
       <div className="hazard-divider" />
 
       {/* Tabs */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -241,18 +241,18 @@ export default function FuelExpensesPage() {
       {/* Summary Tab */}
       {activeTab === "summary" && (
         <div className="space-y-4">
-          <div className="grid sm:grid-cols-3 gap-4">
-            <div className="bg-card border border-border rounded-sm p-4 border-l-[3px] border-l-primary">
-              <p className="text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Fuel Cost</p>
-              <p className="mono-data text-2xl font-bold text-foreground mt-1">${totalFuelCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-card border border-border rounded-sm p-3 sm:p-4 border-l-[3px] border-l-primary">
+              <p className="text-[0.6rem] sm:text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Fuel Cost</p>
+              <p className="mono-data text-xl sm:text-2xl font-bold text-foreground mt-1">${totalFuelCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
             </div>
-            <div className="bg-card border border-border rounded-sm p-4 border-l-[3px] border-l-status-on-trip">
-              <p className="text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Expenses</p>
-              <p className="mono-data text-2xl font-bold text-foreground mt-1">${totalExpenseCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+            <div className="bg-card border border-border rounded-sm p-3 sm:p-4 border-l-[3px] border-l-status-on-trip">
+              <p className="text-[0.6rem] sm:text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Expenses</p>
+              <p className="mono-data text-xl sm:text-2xl font-bold text-foreground mt-1">${totalExpenseCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
             </div>
-            <div className="bg-card border border-border rounded-sm p-4 border-l-[3px] border-l-status-available">
-              <p className="text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Operational Cost</p>
-              <p className="mono-data text-2xl font-bold text-foreground mt-1">${(totalFuelCost + totalExpenseCost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+            <div className="bg-card border border-border rounded-sm p-3 sm:p-4 border-l-[3px] border-l-status-available">
+              <p className="text-[0.6rem] sm:text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Operational Cost</p>
+              <p className="mono-data text-xl sm:text-2xl font-bold text-foreground mt-1">${(totalFuelCost + totalExpenseCost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
             </div>
           </div>
 
@@ -312,7 +312,7 @@ export default function FuelExpensesPage() {
         title="Add Fuel Entry"
         size="lg"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Select
             label="Vehicle"
             value={fuelForm.vehicleId}
@@ -378,7 +378,7 @@ export default function FuelExpensesPage() {
         title="Add Expense"
         size="lg"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Select
             label="Vehicle"
             value={expenseForm.vehicleId}

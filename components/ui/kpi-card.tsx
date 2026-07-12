@@ -55,20 +55,20 @@ export function KpiCard({ label, value, unit, change, icon, color, delay = 0 }: 
   return (
     <div
       className={cn(
-        "relative bg-card border border-border rounded-sm p-4",
+        "relative bg-card border border-border rounded-sm p-3 sm:p-4",
         "border-l-[3px]",
         colorMap[color],
         "animate-stagger-in"
       )}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="flex items-start justify-between">
-        <div className="space-y-1">
-          <p className="text-[0.65rem] font-display font-semibold uppercase tracking-wider text-muted-foreground">
+      <div className="flex items-start justify-between gap-2">
+        <div className="space-y-0.5 min-w-0">
+          <p className="text-[0.6rem] sm:text-[0.65rem] font-display font-semibold uppercase tracking-wider text-muted-foreground truncate">
             {label}
           </p>
-          <div className="flex items-baseline gap-1.5">
-            <span className="mono-data text-2xl font-bold text-foreground">
+          <div className="flex items-baseline gap-1">
+            <span className="mono-data text-xl sm:text-2xl font-bold text-foreground">
               {typeof value === "number" ? value.toLocaleString() : value}
             </span>
             {unit && (

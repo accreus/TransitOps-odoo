@@ -53,7 +53,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       {/* Toast container */}
       <div
-        className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 max-w-sm"
+        className="fixed bottom-20 lg:bottom-4 right-4 left-4 lg:left-auto z-[100] flex flex-col gap-2 lg:max-w-sm"
         role="region"
         aria-label="Notifications"
       >
