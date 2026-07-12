@@ -8,6 +8,7 @@ import { Sidebar } from "./sidebar";
 import { Menu, Bell, Search } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ToastProvider } from "@/components/ui/toast";
+import { ShortcutsProvider } from "@/components/ui/shortcuts-provider";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -26,6 +27,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <ToastProvider>
+    <ShortcutsProvider>
     <div className="flex h-screen overflow-hidden">
       {/* Mobile overlay */}
       {mobileOpen && (
@@ -94,6 +96,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
     </div>
+    </ShortcutsProvider>
     </ToastProvider>
   );
 }
