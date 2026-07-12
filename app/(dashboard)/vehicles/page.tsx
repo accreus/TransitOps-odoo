@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { Input, Select } from "@/components/ui/form-elements";
+import { EmptyState } from "@/components/ui/empty-state";
 import type { Vehicle, VehicleStatus, VehicleType } from "@/types";
 import { Plus, Pencil, Trash2, Filter } from "lucide-react";
 
@@ -188,9 +189,13 @@ export default function VehiclesPage() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-16 text-center">
-                    <Filter className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" aria-hidden="true" />
-                    <p className="text-sm text-muted-foreground">No vehicles match the current filters.</p>
+                  <td colSpan={9} className="px-4 py-4">
+                    <EmptyState
+                      icon={Truck}
+                      title="No vehicles found"
+                      description="No vehicles match the current filters. Try adjusting your filters or add a new vehicle."
+                      action={{ label: "Add Vehicle", onClick: openAdd }}
+                    />
                   </td>
                 </tr>
               )}

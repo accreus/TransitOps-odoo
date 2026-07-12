@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { Input, Select } from "@/components/ui/form-elements";
+import { EmptyState } from "@/components/ui/empty-state";
 import type { Driver, DriverStatus } from "@/types";
 import { Plus, Pencil, Trash2, Filter, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -195,9 +196,13 @@ export default function DriversPage() {
               })}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-4 py-16 text-center">
-                    <Filter className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" aria-hidden="true" />
-                    <p className="text-sm text-muted-foreground">No drivers match the current filters.</p>
+                  <td colSpan={8} className="px-4 py-4">
+                    <EmptyState
+                      icon={Users}
+                      title="No drivers found"
+                      description="No drivers match the current filters. Try adjusting your filters or add a new driver."
+                      action={{ label: "Add Driver", onClick: openAdd }}
+                    />
                   </td>
                 </tr>
               )}
