@@ -10,6 +10,7 @@ import { cn } from "@/lib/cn";
 import { ToastProvider } from "@/components/ui/toast";
 import { ShortcutsProvider } from "@/components/ui/shortcuts-provider";
 import { NotificationsDropdown } from "./notifications-dropdown";
+import { MobileBottomNav } from "./mobile-bottom-nav";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -86,11 +87,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 dashboard-vignette">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-20 lg:pb-6 dashboard-vignette">
           {children}
         </main>
       </div>
     </div>
+    <MobileBottomNav />
     </ShortcutsProvider>
     </ToastProvider>
   );
