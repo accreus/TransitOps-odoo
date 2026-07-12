@@ -237,3 +237,79 @@ input, select, textarea {
   background: var(--color-primary);
   border-radius: 0 2px 2px 0;
 }
+
+/* Button press effect */
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Card hover lift */
+.card-hover {
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+}
+.card-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Focus-visible ring utility */
+.focus-ring {
+  focus-visible: ring-2 focus-visible: ring-ring focus-visible: ring-offset-2;
+}
+
+/* Truncate text with ellipsis */
+.truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Pulsing dot for live indicators */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Loading bar animation */
+@keyframes loading-bar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.loading-bar {
+  position: relative;
+  overflow: hidden;
+  height: 2px;
+  background: var(--color-secondary);
+}
+.loading-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary);
+  animation: loading-bar 1.5s ease-in-out infinite;
+}
+
+/* Glow effect for primary elements */
+.glow-primary {
+  box-shadow: 0 0 12px rgba(255, 176, 32, 0.15);
+}
+
+/* Industrial warning stripe accent */
+.warning-stripe {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 4px,
+    rgba(255, 176, 32, 0.08) 4px,
+    rgba(255, 176, 32, 0.08) 8px
+  );
+}
+
+/* Text selection styling */
+::selection {
+  background: rgba(255, 176, 32, 0.3);
+  color: var(--color-foreground);
+}
