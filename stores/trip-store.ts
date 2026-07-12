@@ -42,9 +42,10 @@ export const useTripStore = create<TripState>((set, get) => ({
 
   addTrip: async (t) => {
     const supabase = createClient();
-    const { error } = await supabase
-      .from("trips")
-      .insert(mapToSnakeCase(t as unknown as Record<string, unknown>));
+    const row = mapToSnakeCase(t as unknown as Record<string, unknown>);
+    delete row.id;
+    delete row.trip_number; // let DB/service generate
+    const { error } = await supabase.from("trips").insert(row);
     if (!error) get().fetchAll();
   },
 
@@ -65,20 +66,20 @@ export const useTripStore = create<TripState>((set, get) => ({
 
   dispatchTrip: async (id) => {
     const supabase = createClient();
-    const { error } = await supabase.rpc("dispatch_trip", { p_trip_id: id });
+    const { error } = await supabase.rpc("dispatch_trip", { trip_id: id });
     if (!error) get().fetchAll();
   },
 
   departTrip: async (id) => {
     const supabase = createClient();
-    const { error } = await supabase.rpc("depart_trip", { p_trip_id: id });
+    const { error } = await supabase.rpc("depart_trip", { trip_id: id });
     if (!error) get().fetchAll();
   },
 
   completeTrip: async (id, fuelUsed, revenue) => {
     const supabase = createClient();
     const { error } = await supabase.rpc("complete_trip", {
-      p_trip_id: id,
+      trip_id: id,
       p_revenue: revenue,
       p_fuel_used: fuelUsed,
     });
@@ -87,7 +88,7 @@ export const useTripStore = create<TripState>((set, get) => ({
 
   cancelTrip: async (id) => {
     const supabase = createClient();
-    const { error } = await supabase.rpc("cancel_trip", { p_trip_id: id });
+    const { error } = await supabase.rpc("cancel_trip", { trip_id: id });
     if (!error) get().fetchAll();
   },
 }));

@@ -50,17 +50,17 @@ export const useFuelExpenseStore = create<FuelExpenseState>((set, get) => ({
 
   addFuelEntry: async (e) => {
     const supabase = createClient();
-    const { error } = await supabase
-      .from("fuel_logs")
-      .insert(mapToSnakeCase(e as unknown as Record<string, unknown>));
+    const row = mapToSnakeCase(e as unknown as Record<string, unknown>);
+    delete row.id;
+    const { error } = await supabase.from("fuel_logs").insert(row);
     if (!error) get().fetchAll();
   },
 
   addExpense: async (e) => {
     const supabase = createClient();
-    const { error } = await supabase
-      .from("expenses")
-      .insert(mapToSnakeCase(e as unknown as Record<string, unknown>));
+    const row = mapToSnakeCase(e as unknown as Record<string, unknown>);
+    delete row.id;
+    const { error } = await supabase.from("expenses").insert(row);
     if (!error) get().fetchAll();
   },
 

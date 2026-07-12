@@ -34,6 +34,15 @@ const ALLOWED_TRIP_TRANSITIONS: Record<string, string[]> = {
   Cancelled: [],
 };
 
+/** Map frontend lowercase status to DB Title Case for queries */
+function dbTripStatus(status: string): string {
+  const map: Record<string, string> = {
+    draft: "Draft", dispatched: "Dispatched", in_transit: "In Transit",
+    completed: "Completed", cancelled: "Cancelled",
+  };
+  return map[status] ?? status;
+}
+
 export async function getTrips(filters?: {
   status?: TripStatus;
   vehicleId?: string;
@@ -41,7 +50,7 @@ export async function getTrips(filters?: {
 }): Promise<ServiceResult<Trip[]>> {
   let query = supabase.from("trips").select("*").order("created_at", { ascending: false });
 
-  if (filters?.status) query = query.eq("status", filters.status);
+  if (filters?.status) query = query.eq("status", dbTripStatus(filters.status));
   if (filters?.vehicleId) query = query.eq("vehicle_id", filters.vehicleId);
   if (filters?.driverId) query = query.eq("driver_id", filters.driverId);
 
@@ -171,7 +180,7 @@ export async function dispatchTrip(id: string): Promise<ServiceResult<Trip>> {
     return { success: false, error: "Driver is no longer available" };
   }
 
-  const { error } = await supabase.rpc("dispatch_trip", { p_trip_id: id });
+  const { error } = await supabase.rpc("dispatch_trip", { trip_id: id });
   if (error) return { success: false, error: error.message };
 
   return getTripById(id);
@@ -189,7 +198,7 @@ export async function departTrip(id: string): Promise<ServiceResult<Trip>> {
     return { success: false, error: "Only dispatched trips can depart" };
   }
 
-  const { error } = await supabase.rpc("depart_trip", { p_trip_id: id });
+  const { error } = await supabase.rpc("depart_trip", { trip_id: id });
   if (error) return { success: false, error: error.message };
 
   return getTripById(id);
@@ -212,7 +221,7 @@ export async function completeTrip(
   }
 
   const { error } = await supabase.rpc("complete_trip", {
-    p_trip_id: id,
+    trip_id: id,
     p_revenue: revenue,
     p_fuel_used: fuelUsedLiters,
   });
@@ -233,7 +242,7 @@ export async function cancelTrip(id: string): Promise<ServiceResult<Trip>> {
     };
   }
 
-  const { error } = await supabase.rpc("cancel_trip", { p_trip_id: id });
+  const { error } = await supabase.rpc("cancel_trip", { trip_id: id });
   if (error) return { success: false, error: error.message };
 
   return getTripById(id);

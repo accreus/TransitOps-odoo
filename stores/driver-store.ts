@@ -36,7 +36,9 @@ export const useDriverStore = create<DriverState>((set, get) => ({
 
   addDriver: async (d) => {
     const supabase = createClient();
-    const { error } = await supabase.from("drivers").insert(mapToSnakeCase(d as unknown as Record<string, unknown>));
+    const row = mapToSnakeCase(d as unknown as Record<string, unknown>);
+    delete row.id;
+    const { error } = await supabase.from("drivers").insert(row);
     if (!error) get().fetchAll();
   },
 

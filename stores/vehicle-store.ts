@@ -24,7 +24,7 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
   fetchAll: async () => {
     set({ loading: true, error: null });
     const supabase = createClient();
-    const { data, error } = await supabase.from("vehicles").select("*").order("reg_number");
+    const { data, error } = await supabase.from("vehicles").select("*").order("registration_number");
 
     if (error) {
       set({ loading: false, error: error.message });
@@ -36,7 +36,9 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
 
   addVehicle: async (v) => {
     const supabase = createClient();
-    const { error } = await supabase.from("vehicles").insert(mapToSnakeCase(v as unknown as Record<string, unknown>));
+    const row = mapToSnakeCase(v as unknown as Record<string, unknown>);
+    delete row.id; // let DB generate UUID
+    const { error } = await supabase.from("vehicles").insert(row);
     if (!error) get().fetchAll();
   },
 

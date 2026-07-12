@@ -5,6 +5,16 @@ import type { Vehicle, VehicleStatus, VehicleType } from "@/types";
 
 const supabase = createAdminClient();
 
+/** Map frontend lowercase status to DB Title Case for queries */
+function dbStatus(status: string): string {
+  const map: Record<string, string> = {
+    available: "Available", on_trip: "On Trip", in_shop: "In Shop", retired: "Retired",
+    draft: "Draft", dispatched: "Dispatched", in_transit: "In Transit",
+    completed: "Completed", cancelled: "Cancelled",
+  };
+  return map[status] ?? status;
+}
+
 export async function getVehicles(filters?: {
   status?: VehicleStatus;
   region?: string;
@@ -13,10 +23,10 @@ export async function getVehicles(filters?: {
 }): Promise<ServiceResult<Vehicle[]>> {
   let query = supabase.from("vehicles").select("*").order("created_at", { ascending: false });
 
-  if (filters?.status) query = query.eq("status", filters.status);
+  if (filters?.status) query = query.eq("status", dbStatus(filters.status));
   if (filters?.region) query = query.eq("region", filters.region);
   if (filters?.type) query = query.eq("type", filters.type);
-  if (filters?.available) query = query.eq("status", "available");
+  if (filters?.available) query = query.eq("status", "Available");
 
   const { data, error } = await query;
   if (error) return { success: false, error: error.message };
@@ -38,7 +48,7 @@ export async function getAvailableVehicles(): Promise<ServiceResult<Vehicle[]>> 
   const { data, error } = await supabase
     .from("vehicles")
     .select("*")
-    .eq("status", "available")
+    .eq("status", "Available")
     .order("registration_number");
 
   if (error) return { success: false, error: error.message };
@@ -48,7 +58,6 @@ export async function getAvailableVehicles(): Promise<ServiceResult<Vehicle[]>> 
 export async function createVehicle(
   vehicle: Omit<Vehicle, "id">,
 ): Promise<ServiceResult<Vehicle>> {
-  // Check registration uniqueness
   const { data: existing } = await supabase
     .from("vehicles")
     .select("id")
@@ -73,7 +82,6 @@ export async function updateVehicle(
   id: string,
   updates: Partial<Vehicle>,
 ): Promise<ServiceResult<Vehicle>> {
-  // If updating registration, check uniqueness
   if (updates.regNumber) {
     const { data: existing } = await supabase
       .from("vehicles")
@@ -98,15 +106,11 @@ export async function updateVehicle(
   return { success: true, data: mapRowsToCamelCase<Vehicle>([data])[0] };
 }
 
-/**
- * Enforce valid status transitions server-side.
- * allowedTransitions[from] = set of valid `to` statuses.
- */
 const ALLOWED_VEHICLE_TRANSITIONS: Record<VehicleStatus, VehicleStatus[]> = {
   available: ["on_trip", "in_shop", "retired"],
   on_trip: ["available", "in_shop"],
   in_shop: ["available", "retired"],
-  retired: [], // terminal state
+  retired: [],
 };
 
 export async function setVehicleStatus(
@@ -128,19 +132,17 @@ export async function setVehicleStatus(
 }
 
 export async function deleteVehicle(id: string): Promise<ServiceResult<void>> {
-  // Check for active trips
   const { data: activeTrips } = await supabase
     .from("trips")
     .select("id")
     .eq("vehicle_id", id)
-    .in("status", ["draft", "dispatched"])
+    .in("status", ["Draft", "Dispatched"])
     .limit(1);
 
   if (activeTrips && activeTrips.length > 0) {
     return { success: false, error: "Cannot delete vehicle with active trips" };
   }
 
-  // Soft-delete: set to retired
   const result = await updateVehicle(id, { status: "retired" } as Partial<Vehicle>);
   if (!result.success) return { success: false, error: result.error };
   return { success: true, data: undefined };
@@ -156,10 +158,10 @@ export async function getVehicleStats(): Promise<
   for (const v of data ?? []) {
     stats.total++;
     switch (v.status) {
-      case "available": stats.available++; break;
-      case "on_trip": stats.onTrip++; break;
-      case "in_shop": stats.inShop++; break;
-      case "retired": stats.retired++; break;
+      case "Available": stats.available++; break;
+      case "On Trip": stats.onTrip++; break;
+      case "In Shop": stats.inShop++; break;
+      case "Retired": stats.retired++; break;
     }
   }
 

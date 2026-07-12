@@ -66,7 +66,7 @@ export async function createMaintenanceLog(
     .single();
 
   if (!vehicle) return { success: false, error: "Vehicle not found", field: "vehicleId" };
-  if (vehicle.status === "retired") {
+  if (vehicle.status === "Retired") {
     return { success: false, error: "Cannot create maintenance for retired vehicle", field: "vehicleId" };
   }
 
