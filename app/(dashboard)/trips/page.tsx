@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { useTripStore, useVehicleStore, useDriverStore } from "@/stores";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { TripProgress } from "@/components/ui/trip-progress";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { Input, Select, Textarea } from "@/components/ui/form-elements";
@@ -219,6 +220,9 @@ export default function TripsPage() {
                   ))}
                 </div>
               )}
+
+              {/* Progress bar */}
+              <TripProgress status={trip.status} className="mb-3" />
 
               {/* Details row */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
