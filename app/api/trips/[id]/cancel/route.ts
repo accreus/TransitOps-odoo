@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireAuth, requireRole } from "@/lib/auth-helpers";
 import * as tripService from "@/lib/services/trip-service";
 
 export async function POST(
@@ -7,14 +7,14 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const auth = await requireAuth();
+  if (!auth.success) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
 
-  if (error || !user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const roleCheck = requireRole(auth.data.role, "trips", "update");
+  if (!roleCheck.success) {
+    return NextResponse.json({ error: roleCheck.error }, { status: 403 });
   }
 
   const result = await tripService.cancelTrip(id);

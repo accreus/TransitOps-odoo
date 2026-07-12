@@ -1,20 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireAuth, requireRole } from "@/lib/auth-helpers";
 import * as driverService from "@/lib/services/driver-service";
+import { updateDriverSchema } from "@/lib/validation";
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const auth = await requireAuth();
+  if (!auth.success) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
   }
 
   const result = await driverService.getDriverById(id);
@@ -29,19 +25,26 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const auth = await requireAuth();
+  if (!auth.success) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
 
-  if (error || !user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const roleCheck = requireRole(auth.data.role, "drivers", "update");
+  if (!roleCheck.success) {
+    return NextResponse.json({ error: roleCheck.error }, { status: 403 });
   }
 
   const body = await request.json();
-  const result = await driverService.updateDriver(id, body);
+  const parsed = updateDriverSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0].message, field: parsed.error.issues[0].path.join(".") },
+      { status: 400 },
+    );
+  }
 
+  const result = await driverService.updateDriver(id, parsed.data);
   if (!result.success) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
@@ -53,14 +56,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const auth = await requireAuth();
+  if (!auth.success) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
 
-  if (error || !user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const roleCheck = requireRole(auth.data.role, "drivers", "delete");
+  if (!roleCheck.success) {
+    return NextResponse.json({ error: roleCheck.error }, { status: 403 });
   }
 
   const result = await driverService.deleteDriver(id);
