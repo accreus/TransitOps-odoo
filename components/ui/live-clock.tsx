@@ -9,16 +9,13 @@ interface LiveClockProps {
 }
 
 export function LiveClock({ className }: LiveClockProps) {
-  const [time, setTime] = useState<Date | null>(null);
+  const [time, setTime] = useState<Date>(() => new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    setTime(new Date());
     const interval = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);
-
-  if (!time) return null;
 
   const formatted = time.toLocaleTimeString("en-US", {
     hour12: false,

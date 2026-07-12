@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Bell, Truck, AlertTriangle, CheckCircle, X, Settings } from "lucide-react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { Bell, Truck, AlertTriangle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useVehicleStore, useDriverStore } from "@/stores";
 import { differenceInDays } from "date-fns";
@@ -16,14 +16,11 @@ interface Notification {
 
 export function NotificationsDropdown() {
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const vehicles = useVehicleStore((s) => s.vehicles);
   const drivers = useDriverStore((s) => s.drivers);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
-
-  useEffect(() => {
+  const computedNotifications = useMemo(() => {
     const items: Notification[] = [];
     const now = new Date("2026-07-12");
 
@@ -50,8 +47,15 @@ export function NotificationsDropdown() {
       });
     });
 
-    setNotifications(items.slice(0, 8));
+    return items.slice(0, 8);
   }, [vehicles, drivers]);
+
+  const [readState, setReadState] = useState<Record<string, boolean>>({});
+  const notifications = useMemo(
+    () => computedNotifications.map((n) => ({ ...n, read: readState[n.id] ?? n.read })),
+    [computedNotifications, readState]
+  );
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -66,7 +70,9 @@ export function NotificationsDropdown() {
   }, [open]);
 
   const markAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    const allRead: Record<string, boolean> = {};
+    notifications.forEach((n) => { allRead[n.id] = true; });
+    setReadState(allRead);
   };
 
   const typeIcon = (type: string) => {

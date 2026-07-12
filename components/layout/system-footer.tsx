@@ -1,7 +1,6 @@
 "use client";
 
 import { useVehicleStore, useDriverStore, useTripStore } from "@/stores";
-import { cn } from "@/lib/cn";
 
 export function SystemFooter() {
   const vehicles = useVehicleStore((s) => s.vehicles);

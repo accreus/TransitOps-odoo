@@ -11,6 +11,11 @@ import {
   Truck,
   ArrowRight,
   AlertTriangle,
+  Activity,
+  MapPin,
+  Clock,
+  Fuel,
+  BarChart3,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -94,8 +99,19 @@ export default function DashboardPage() {
       .slice(0, 5);
   }, [trips]);
 
+  const activeTripDetails = useMemo(() => {
+    return trips
+      .filter((t) => t.status === "in_transit" || t.status === "dispatched")
+      .map((t) => ({
+        ...t,
+        vehicle: vehicles.find((v) => v.id === t.vehicleId),
+        driver: drivers.find((d) => d.id === t.driverId),
+      }))
+      .slice(0, 3);
+  }, [trips, vehicles, drivers]);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Page header */}
       <div className="flex items-end justify-between">
         <div>
@@ -110,178 +126,282 @@ export default function DashboardPage() {
 
       <div className="hazard-divider" />
 
-      {/* KPI Strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+      {/* KPI Strip — departures board style */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2">
         {kpis.map((kpi, i) => (
           <KpiCard key={kpi.label} {...kpi} delay={i * 60} />
         ))}
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap items-end gap-3">
-        <div className="w-44">
-          <Select
-            label="Region"
-            value={regionFilter}
-            onChange={(e) => setRegionFilter(e.target.value)}
-            options={regions.map((r) => ({ value: r, label: r }))}
-          />
-        </div>
-        <div className="w-44">
-          <Select
-            label="Vehicle Type"
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            options={vehicleTypes.map((t) => ({ value: t, label: t === "All Types" ? t : t.charAt(0).toUpperCase() + t.slice(1) }))}
-          />
-        </div>
-        <div className="w-44">
-          <Select
-            label="Status"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            options={vehicleStatuses.map((s) => ({ value: s, label: s === "All Status" ? s : s.replace("_", " ").toUpperCase() }))}
-          />
-        </div>
-      </div>
+      {/* ─── TWO-PANEL DISPATCH CONSOLE ─── */}
+      <div className="grid lg:grid-cols-5 gap-4 min-h-[600px]">
 
-      {/* Main grid */}
-      <div className="grid lg:grid-cols-3 gap-4">
-        {/* Vehicle Status Board */}
-        <div className="lg:col-span-2 bg-card border border-border rounded-sm">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-foreground">
-              Vehicle Status Board
-            </h2>
-            <Link
-              href="/vehicles"
-              className="text-xs text-primary hover:text-primary/80 font-display uppercase tracking-wider flex items-center gap-1 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-            >
-              View All <ArrowRight className="h-3 w-3" aria-hidden="true" />
-            </Link>
+        {/* ═══ LEFT PANEL (3/5) — Vehicle Fleet Board ═══ */}
+        <div className="lg:col-span-3 flex flex-col gap-4">
+
+          {/* Filters row */}
+          <div className="flex flex-wrap items-end gap-2">
+            <div className="w-36">
+              <Select
+                label="Region"
+                value={regionFilter}
+                onChange={(e) => setRegionFilter(e.target.value)}
+                options={regions.map((r) => ({ value: r, label: r }))}
+              />
+            </div>
+            <div className="w-36">
+              <Select
+                label="Type"
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                options={vehicleTypes.map((t) => ({ value: t, label: t === "All Types" ? t : t.charAt(0).toUpperCase() + t.slice(1) }))}
+              />
+            </div>
+            <div className="w-36">
+              <Select
+                label="Status"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                options={vehicleStatuses.map((s) => ({ value: s, label: s === "All Status" ? s : s.replace("_", " ").toUpperCase() }))}
+              />
+            </div>
+            <div className="ml-auto">
+              <Link
+                href="/vehicles"
+                className="inline-flex items-center gap-1.5 px-3 h-9 bg-secondary text-secondary-foreground rounded-sm text-xs font-display uppercase tracking-wider hover:bg-secondary/80 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                Full Registry <ArrowRight className="h-3 w-3" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm" role="table">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left px-4 py-2.5 font-display text-[0.65rem] uppercase tracking-wider text-muted-foreground font-semibold">REG</th>
-                  <th className="text-left px-4 py-2.5 font-display text-[0.65rem] uppercase tracking-wider text-muted-foreground font-semibold hidden sm:table-cell">TYPE</th>
-                  <th className="text-left px-4 py-2.5 font-display text-[0.65rem] uppercase tracking-wider text-muted-foreground font-semibold hidden md:table-cell">MAKE</th>
-                  <th className="text-left px-4 py-2.5 font-display text-[0.65rem] uppercase tracking-wider text-muted-foreground font-semibold hidden lg:table-cell">REGION</th>
-                  <th className="text-left px-4 py-2.5 font-display text-[0.65rem] uppercase tracking-wider text-muted-foreground font-semibold hidden xl:table-cell">ODOMETER</th>
-                  <th className="text-right px-4 py-2.5 font-display text-[0.65rem] uppercase tracking-wider text-muted-foreground font-semibold">STATUS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredVehicles.map((vehicle, i) => (
-                  <tr
-                    key={vehicle.id}
-                    className="border-b border-border/50 table-row-hover animate-manifest-print"
-                    style={{ animationDelay: `${i * 40}ms` }}
-                  >
-                    <td className="px-4 py-2.5">
-                      <span className="mono-data font-semibold text-foreground">{vehicle.regNumber}</span>
-                    </td>
-                    <td className="px-4 py-2.5 hidden sm:table-cell">
-                      <span className="text-xs uppercase text-muted-foreground">{vehicle.type}</span>
-                    </td>
-                    <td className="px-4 py-2.5 hidden md:table-cell">
-                      <span className="text-foreground">{vehicle.make} {vehicle.model}</span>
-                    </td>
-                    <td className="px-4 py-2.5 hidden lg:table-cell">
-                      <span className="text-xs text-muted-foreground">{vehicle.region}</span>
-                    </td>
-                    <td className="px-4 py-2.5 hidden xl:table-cell">
-                      <span className="mono-data text-xs text-muted-foreground">{vehicle.currentOdometer.toLocaleString()} mi</span>
-                    </td>
-                    <td className="px-4 py-2.5 text-right">
-                      <StatusBadge status={vehicle.status} />
-                    </td>
+
+          {/* Vehicle Status Board — the main table */}
+          <div className="flex-1 bg-card border border-border rounded-sm overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-secondary/20">
+              <h2 className="font-display text-xs font-semibold uppercase tracking-wider text-foreground flex items-center gap-2">
+                <Truck className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                Vehicle Fleet Board
+              </h2>
+              <span className="mono-data text-[0.65rem] text-muted-foreground">
+                {filteredVehicles.length} / {vehicles.length}
+              </span>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <table className="w-full text-sm" role="table">
+                <thead className="sticky top-0 bg-card z-10">
+                  <tr className="border-b border-border">
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold">REG</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold hidden sm:table-cell">TYPE</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold hidden md:table-cell">VEHICLE</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold hidden lg:table-cell">REGION</th>
+                    <th className="text-left px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold hidden xl:table-cell">ODOMETER</th>
+                    <th className="text-right px-4 py-2 font-display text-[0.6rem] uppercase tracking-wider text-muted-foreground font-semibold">STATUS</th>
                   </tr>
-                ))}
-                {filteredVehicles.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-4 py-12 text-center">
-                      <p className="text-sm text-muted-foreground">No vehicles match the current filters.</p>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredVehicles.map((vehicle, i) => (
+                    <tr
+                      key={vehicle.id}
+                      className="border-b border-border/30 table-row-hover animate-manifest-print"
+                      style={{ animationDelay: `${i * 30}ms` }}
+                    >
+                      <td className="px-4 py-2">
+                        <span className="mono-data font-semibold text-foreground text-xs">{vehicle.regNumber}</span>
+                      </td>
+                      <td className="px-4 py-2 hidden sm:table-cell">
+                        <span className="text-[0.65rem] uppercase text-muted-foreground font-display tracking-wider">{vehicle.type}</span>
+                      </td>
+                      <td className="px-4 py-2 hidden md:table-cell">
+                        <span className="text-xs text-foreground">{vehicle.make} {vehicle.model}</span>
+                        <span className="text-[0.6rem] text-muted-foreground ml-1.5">{vehicle.year}</span>
+                      </td>
+                      <td className="px-4 py-2 hidden lg:table-cell">
+                        <span className="text-[0.65rem] text-muted-foreground">{vehicle.region}</span>
+                      </td>
+                      <td className="px-4 py-2 hidden xl:table-cell">
+                        <span className="mono-data text-[0.65rem] text-muted-foreground">{vehicle.currentOdometer.toLocaleString()}</span>
+                      </td>
+                      <td className="px-4 py-2 text-right">
+                        <StatusBadge status={vehicle.status} />
+                      </td>
+                    </tr>
+                  ))}
+                  {filteredVehicles.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="px-4 py-16 text-center">
+                        <Truck className="h-6 w-6 text-muted-foreground/30 mx-auto mb-2" aria-hidden="true" />
+                        <p className="text-xs text-muted-foreground">No vehicles match filters</p>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        {/* Right column: Recent Trips + Alerts */}
-        <div className="space-y-4">
-          {/* Recent Trips */}
-          <div className="bg-card border border-border rounded-sm">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-foreground">
-                Recent Trips
+        {/* ═══ RIGHT PANEL (2/5) — Activity Feed ═══ */}
+        <div className="lg:col-span-2 flex flex-col gap-4">
+
+          {/* Active Trips — live operations */}
+          <div className="bg-card border border-border rounded-sm overflow-hidden flex-1">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-secondary/20">
+              <h2 className="font-display text-xs font-semibold uppercase tracking-wider text-foreground flex items-center gap-2">
+                <Activity className="h-3.5 w-3.5 text-status-in-transit" aria-hidden="true" />
+                Live Operations
               </h2>
               <Link
                 href="/trips"
-                className="text-xs text-primary hover:text-primary/80 font-display uppercase tracking-wider flex items-center gap-1 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+                className="text-[0.65rem] text-primary hover:text-primary/80 font-display uppercase tracking-wider flex items-center gap-1 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
               >
-                View All <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                All <ArrowRight className="h-2.5 w-2.5" aria-hidden="true" />
               </Link>
             </div>
-            <div className="divide-y divide-border/50">
+            <div className="divide-y divide-border/30">
+              {activeTripDetails.length === 0 ? (
+                <div className="px-4 py-8 text-center">
+                  <MapPin className="h-5 w-5 text-muted-foreground/30 mx-auto mb-1.5" aria-hidden="true" />
+                  <p className="text-[0.65rem] text-muted-foreground">No active operations</p>
+                </div>
+              ) : (
+                activeTripDetails.map((trip, i) => (
+                  <div
+                    key={trip.id}
+                    className="px-4 py-3 animate-manifest-print"
+                    style={{ animationDelay: `${i * 60}ms` }}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="mono-data text-[0.65rem] font-bold text-foreground">{trip.tripNumber}</span>
+                      <StatusBadge status={trip.status} />
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1.5">
+                      <MapPin className="h-3 w-3 text-primary shrink-0" aria-hidden="true" />
+                      <span className="truncate">{trip.source}</span>
+                      <ArrowRight className="h-2.5 w-2.5 text-primary shrink-0" aria-hidden="true" />
+                      <span className="truncate">{trip.destination}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[0.6rem] text-muted-foreground/70">
+                      <span className="flex items-center gap-1">
+                        <Truck className="h-2.5 w-2.5" aria-hidden="true" />
+                        {trip.vehicle?.regNumber || "—"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-2.5 w-2.5" aria-hidden="true" />
+                        {trip.driver?.name || "—"}
+                      </span>
+                      <span>{trip.cargoWeightKg.toLocaleString()} kg</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Recent Trips */}
+          <div className="bg-card border border-border rounded-sm overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-secondary/20">
+              <h2 className="font-display text-xs font-semibold uppercase tracking-wider text-foreground flex items-center gap-2">
+                <Clock className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
+                Recent Activity
+              </h2>
+              <Link
+                href="/trips"
+                className="text-[0.65rem] text-primary hover:text-primary/80 font-display uppercase tracking-wider flex items-center gap-1 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+              >
+                All <ArrowRight className="h-2.5 w-2.5" aria-hidden="true" />
+              </Link>
+            </div>
+            <div className="divide-y divide-border/30">
               {recentTrips.map((trip, i) => (
                 <div
                   key={trip.id}
-                  className="px-4 py-3 animate-manifest-print"
-                  style={{ animationDelay: `${i * 50 + 200}ms` }}
+                  className="px-4 py-2.5 flex items-center justify-between animate-manifest-print"
+                  style={{ animationDelay: `${i * 40 + 100}ms` }}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="mono-data text-xs font-semibold text-foreground">{trip.tripNumber}</span>
-                    <StatusBadge status={trip.status} />
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="mono-data text-[0.65rem] font-semibold text-foreground">{trip.tripNumber}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-[0.6rem] text-muted-foreground mt-0.5">
+                      <span className="truncate">{trip.source}</span>
+                      <ArrowRight className="h-2 w-2 text-primary shrink-0" aria-hidden="true" />
+                      <span className="truncate">{trip.destination}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <span>{trip.source}</span>
-                    <ArrowRight className="h-3 w-3 text-primary" aria-hidden="true" />
-                    <span>{trip.destination}</span>
-                  </div>
+                  <StatusBadge status={trip.status} />
                 </div>
               ))}
             </div>
           </div>
 
           {/* Alerts */}
-          <div className="bg-card border border-border rounded-sm">
-            <div className="px-4 py-3 border-b border-border">
-              <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-foreground flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-primary" aria-hidden="true" />
+          <div className={cn(
+            "bg-card border rounded-sm overflow-hidden",
+            alerts.length > 0 ? "border-destructive/30" : "border-border"
+          )}>
+            <div className="px-4 py-2.5 border-b border-border bg-secondary/20">
+              <h2 className="font-display text-xs font-semibold uppercase tracking-wider text-foreground flex items-center gap-2">
+                <AlertTriangle className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
                 Alerts
+                {alerts.length > 0 && (
+                  <span className="ml-1 h-4 min-w-[16px] inline-flex items-center justify-center px-1 bg-destructive text-destructive-foreground rounded-sm text-[0.55rem] font-mono font-bold">
+                    {alerts.length}
+                  </span>
+                )}
               </h2>
             </div>
-            <div className="divide-y divide-border/50">
+            <div className="divide-y divide-border/30">
               {alerts.map((alert, i) => (
                 <div
                   key={alert.id}
                   className={cn(
-                    "px-4 py-3 flex items-start gap-3 animate-manifest-print",
+                    "px-4 py-2.5 flex items-start gap-2.5 animate-manifest-print",
                     alert.severity === "high" && "bg-destructive/5"
                   )}
-                  style={{ animationDelay: `${i * 50 + 400}ms` }}
+                  style={{ animationDelay: `${i * 40 + 200}ms` }}
                 >
                   <alert.icon
                     className={cn(
-                      "h-4 w-4 mt-0.5 shrink-0",
+                      "h-3.5 w-3.5 mt-0.5 shrink-0",
                       alert.severity === "high" ? "text-destructive" : "text-primary"
                     )}
                     aria-hidden="true"
                   />
-                  <p className="text-xs text-foreground">{alert.message}</p>
+                  <p className="text-xs text-foreground leading-relaxed">{alert.message}</p>
                 </div>
               ))}
               {alerts.length === 0 && (
                 <div className="px-4 py-6 text-center">
-                  <p className="text-xs text-muted-foreground">All clear — no active alerts.</p>
+                  <p className="text-[0.65rem] text-muted-foreground">All clear — no active alerts</p>
                 </div>
               )}
             </div>
           </div>
+
+          {/* Quick Links */}
+          <div className="grid grid-cols-2 gap-2">
+            <Link
+              href="/fuel-expenses"
+              className="bg-card border border-border rounded-sm p-3 flex items-center gap-2.5 hover:border-primary/30 hover:bg-primary/5 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <Fuel className="h-4 w-4 text-primary shrink-0" aria-hidden="true" />
+              <div>
+                <p className="text-[0.65rem] font-display uppercase tracking-wider text-foreground font-semibold">Fuel Log</p>
+                <p className="text-[0.55rem] text-muted-foreground">Track fuel entries</p>
+              </div>
+            </Link>
+            <Link
+              href="/reports"
+              className="bg-card border border-border rounded-sm p-3 flex items-center gap-2.5 hover:border-primary/30 hover:bg-primary/5 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <BarChart3 className="h-4 w-4 text-status-on-trip shrink-0" aria-hidden="true" />
+              <div>
+                <p className="text-[0.65rem] font-display uppercase tracking-wider text-foreground font-semibold">Reports</p>
+                <p className="text-[0.55rem] text-muted-foreground">Analytics & export</p>
+              </div>
+            </Link>
+          </div>
+
         </div>
       </div>
     </div>
