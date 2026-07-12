@@ -52,11 +52,15 @@ export function requireRole(
   resource: Resource,
   action: Action,
 ): ServiceResult<true> {
-  const allowedRoles = RESOURCE_ROLES[resource]?.[action];
-  if (!allowedRoles) {
-    return { success: false, error: `Unknown resource/action: ${resource}/${action}` };
+  const resourcePolicy = RESOURCE_ROLES[resource];
+  if (!resourcePolicy) {
+    return { success: false, error: `Unknown resource: ${resource}` };
   }
-  if ((allowedRoles as readonly FrontendRole[]).includes(userRole)) {
+  const allowedRoles = (resourcePolicy as Record<string, readonly FrontendRole[]>)[action];
+  if (!allowedRoles) {
+    return { success: false, error: `Unknown action: ${action} on ${resource}` };
+  }
+  if (allowedRoles.includes(userRole)) {
     return { success: true, data: true };
   }
   return {

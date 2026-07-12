@@ -21,8 +21,8 @@ export async function getMaintenanceLogs(vehicleId?: string): Promise<ServiceRes
   const { data, error } = await query;
   if (error) return { success: false, error: error.message };
 
-  const rows = (data ?? []).map((row) => {
-    const mapped = mapRowsToCamelCase<MaintenanceLog>([row])[0];
+  const rows = (data ?? []).map((row: Record<string, unknown>) => {
+    const mapped = mapRowsToCamelCase<MaintenanceLog>([row as Record<string, unknown>])[0];
     const vehicle = row.vehicle as { registration_number: string; model: string } | null;
     return {
       ...mapped,
@@ -136,8 +136,8 @@ export async function getMaintenanceStats(): Promise<
   if (allError) return { success: false, error: allError.message };
   if (openError) return { success: false, error: openError.message };
 
-  const all = allLogs ?? [];
-  const open = openLogs ?? [];
+  const all = (allLogs ?? []) as { state: string; cost: number; vehicle_id: string }[];
+  const open = (openLogs ?? []) as { vehicle_id: string }[];
 
   return {
     success: true,
@@ -145,8 +145,8 @@ export async function getMaintenanceStats(): Promise<
       totalLogs: all.length,
       openLogs: open.length,
       closedLogs: all.length - open.length,
-      totalCost: all.reduce((sum, log) => sum + (Number(log.cost) || 0), 0),
-      vehiclesInShop: new Set(open.map((l) => l.vehicle_id)).size,
+      totalCost: all.reduce((sum: number, log: { cost: number }) => sum + (Number(log.cost) || 0), 0),
+      vehiclesInShop: new Set(open.map((l: { vehicle_id: string }) => l.vehicle_id)).size,
     },
   };
 }

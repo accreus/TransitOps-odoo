@@ -153,7 +153,7 @@ export async function getVehicleStats(): Promise<
   if (error) return { success: false, error: error.message };
 
   const stats = { total: 0, available: 0, onTrip: 0, inShop: 0, retired: 0 };
-  (data ?? []).forEach((v) => {
+  for (const v of data ?? []) {
     stats.total++;
     switch (v.status) {
       case "available": stats.available++; break;
@@ -161,7 +161,7 @@ export async function getVehicleStats(): Promise<
       case "in_shop": stats.inShop++; break;
       case "retired": stats.retired++; break;
     }
-  });
+  }
 
   return { success: true, data: stats };
 }

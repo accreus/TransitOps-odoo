@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, requireRole } from "@/lib/auth-helpers";
 import * as driverService from "@/lib/services/driver-service";
 import { createDriverSchema } from "@/lib/validation";
+import type { DriverStatus } from "@/types";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth();
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
   const region = searchParams.get("region");
 
   const result = await driverService.getDrivers({
-    status: status ?? undefined,
+    status: (status as DriverStatus) ?? undefined,
     region: region ?? undefined,
   });
 

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuth, requireRole } from "@/lib/auth-helpers";
+import { requireAuth } from "@/lib/auth-helpers";
 import * as tripService from "@/lib/services/trip-service";
 import { createTripSchema } from "@/lib/validation";
+import type { TripStatus } from "@/types";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth();
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
   const driverId = searchParams.get("driverId");
 
   const result = await tripService.getTrips({
-    status: status ?? undefined,
+    status: (status as TripStatus) ?? undefined,
     vehicleId: vehicleId ?? undefined,
     driverId: driverId ?? undefined,
   });

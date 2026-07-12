@@ -39,9 +39,9 @@ export async function getDocuments(
   if (error) return { success: false, error: error.message };
 
   const docs = await Promise.all(
-    (data ?? []).map(async (doc) => {
+    (data ?? []).map(async (doc: Record<string, unknown>) => {
       const mapped = mapRowsToCamelCase<DocumentRecord>([doc])[0];
-      const signedUrl = await createSignedUrl(doc.file_path);
+      const signedUrl = await createSignedUrl(doc.file_path as string);
       return { ...mapped, signedUrl };
     }),
   );

@@ -49,9 +49,9 @@ export async function getTrips(filters?: {
   if (error) return { success: false, error: error.message };
 
   // Normalize statuses to frontend format
-  const trips = (data ?? []).map((row) => {
+  const trips = (data ?? []).map((row: Record<string, unknown>) => {
     const mapped = mapRowsToCamelCase<Trip>([row])[0];
-    mapped.status = toFrontendStatus(row.status);
+    mapped.status = toFrontendStatus(row.status as string);
     return mapped;
   });
 

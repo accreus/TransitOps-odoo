@@ -96,9 +96,9 @@ export async function getOperationalCost(
     supabase.from("maintenance_logs").select("cost").eq("vehicle_id", vehicleId),
   ]);
 
-  const fuel = (fuelResult.data ?? []).reduce((sum, e) => sum + (Number(e.cost) ?? 0), 0);
-  const expenses = (expenseResult.data ?? []).reduce((sum, e) => sum + (Number(e.cost) ?? 0), 0);
-  const maintenance = (maintenanceResult.data ?? []).reduce((sum, e) => sum + (Number(e.cost) ?? 0), 0);
+  const fuel = (fuelResult.data ?? []).reduce((sum: number, e: { cost: number }) => sum + (Number(e.cost) ?? 0), 0);
+  const expenses = (expenseResult.data ?? []).reduce((sum: number, e: { cost: number }) => sum + (Number(e.cost) ?? 0), 0);
+  const maintenance = (maintenanceResult.data ?? []).reduce((sum: number, e: { cost: number }) => sum + (Number(e.cost) ?? 0), 0);
 
   return {
     success: true,

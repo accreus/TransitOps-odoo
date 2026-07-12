@@ -17,10 +17,11 @@ export async function POST(request: NextRequest) {
       user: result.user,
       session: result.session
     })
-  } catch (error) {
-    console.error('Login error:', error)
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error)
+    console.error('Login error:', message)
 
-    if (error.message?.includes('Invalid login credentials')) {
+    if (message.includes('Invalid login credentials')) {
       return NextResponse.json({
         error: 'Invalid email or password'
       }, { status: 401 })

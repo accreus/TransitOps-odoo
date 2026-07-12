@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, requireRole } from "@/lib/auth-helpers";
 import * as vehicleService from "@/lib/services/vehicle-service";
 import { createVehicleSchema } from "@/lib/validation";
+import type { VehicleStatus } from "@/types";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth();
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
 
   const result = await vehicleService.getVehicles({
     available: availableOnly || undefined,
-    status: status ?? undefined,
+    status: (status as VehicleStatus) ?? undefined,
     region: region ?? undefined,
   });
 
