@@ -136,7 +136,10 @@ const FE_TO_DB: Record<string, string> = Object.fromEntries(
 export function toSnakeCase<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {
-    const snakeKey = FE_TO_DB[key] ?? camelToSnake(key);
+    let snakeKey = FE_TO_DB[key] ?? camelToSnake(key);
+    if (key === "totalCost" || key === "amount") {
+      snakeKey = "cost";
+    }
     result[snakeKey] = MAPPED_FIELDS.has(snakeKey) ? mapValue(snakeKey, value) : value;
   }
   return result;
@@ -145,7 +148,14 @@ export function toSnakeCase<T extends Record<string, unknown>>(obj: T): Record<s
 export function toCamelCase<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {
-    const camelKey = DB_TO_FE[key] ?? snakeToCamel(key);
+    let camelKey = DB_TO_FE[key] ?? snakeToCamel(key);
+    if (key === "cost") {
+      if ("liters" in obj || "cost_per_liter" in obj || "odometer_reading" in obj) {
+        camelKey = "totalCost";
+      } else if ("category" in obj || "receipt_url" in obj) {
+        camelKey = "amount";
+      }
+    }
     const val = MAPPED_FIELDS.has(key) ? reverseMapValue(key, value) : value;
     result[camelKey] = val;
   }
