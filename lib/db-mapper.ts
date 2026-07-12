@@ -91,10 +91,52 @@ function reverseMapValue(key: string, value: unknown): unknown {
 
 // ─── Public helpers ──────────────────────────────────────────────────────────
 
+// Column name aliases: DB column → frontend camelCase key
+const DB_TO_FE: Record<string, string> = {
+  registration_number: "regNumber",
+  odometer: "currentOdometer",
+  max_load_capacity: "maxLoadKg",
+  acquisition_cost: "acquisitionCost",
+  last_service_date: "lastServiceDate",
+  fuel_type: "fuelType",
+  license_number: "licenseNumber",
+  license_category: "licenseCategory",
+  license_expiry: "licenseExpiry",
+  safety_score: "safetyScore",
+  assigned_vehicle_id: "assignedVehicleId",
+  join_date: "joinDate",
+  total_trips: "totalTrips",
+  trip_number: "tripNumber",
+  cargo_description: "cargoDescription",
+  cargo_weight: "cargoWeight",
+  planned_distance: "distanceKm",
+  scheduled_departure: "scheduledDeparture",
+  actual_departure: "actualDeparture",
+  scheduled_arrival: "scheduledArrival",
+  actual_arrival: "actualArrival",
+  fuel_used_liters: "fuelUsedLiters",
+  reference_type: "referenceType",
+  reference_id: "referenceId",
+  file_path: "filePath",
+  document_type: "documentType",
+  cost_per_liter: "costPerLiter",
+  odometer_reading: "odometerReading",
+  completed_date: "completedDate",
+  parts_replaced: "partsReplaced",
+  receipt_url: "receiptUrl",
+  created_at: "createdAt",
+  updated_at: "updatedAt",
+};
+
+// Reverse: frontend camelCase → DB snake_case
+const FE_TO_DB: Record<string, string> = Object.fromEntries(
+  Object.entries(DB_TO_FE).map(([k, v]) => [v, k])
+);
+
 export function toSnakeCase<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {
-    const snakeKey = camelToSnake(key);
+    const snakeKey = FE_TO_DB[key] ?? camelToSnake(key);
     result[snakeKey] = MAPPED_FIELDS.has(snakeKey) ? mapValue(snakeKey, value) : value;
   }
   return result;
@@ -103,7 +145,7 @@ export function toSnakeCase<T extends Record<string, unknown>>(obj: T): Record<s
 export function toCamelCase<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {
-    const camelKey = snakeToCamel(key);
+    const camelKey = DB_TO_FE[key] ?? snakeToCamel(key);
     const val = MAPPED_FIELDS.has(key) ? reverseMapValue(key, value) : value;
     result[camelKey] = val;
   }
