@@ -8,7 +8,7 @@ import { Modal } from "@/components/ui/modal";
 import { Input, Select } from "@/components/ui/form-elements";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Driver, DriverStatus } from "@/types";
-import { Plus, Pencil, Trash2, Filter, ShieldAlert } from "lucide-react";
+import { Plus, Pencil, Trash2, Filter, ShieldAlert, Users } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { differenceInDays } from "date-fns";
 

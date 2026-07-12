@@ -8,7 +8,7 @@ import { Modal } from "@/components/ui/modal";
 import { Input, Select } from "@/components/ui/form-elements";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Vehicle, VehicleStatus, VehicleType } from "@/types";
-import { Plus, Pencil, Trash2, Filter } from "lucide-react";
+import { Plus, Pencil, Trash2, Filter, Truck } from "lucide-react";
 
 const statusOptions = ["All Status", "available", "on_trip", "in_shop", "retired"];
 const typeOptions = ["All Types", "truck", "van", "trailer", " tanker"];
