@@ -90,7 +90,7 @@ export default function VehiclesPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-end gap-3">
-        <div className="w-40">
+        <div className="w-full sm:w-40">
           <Select
             label="Status"
             value={statusFilter}
@@ -98,7 +98,7 @@ export default function VehiclesPage() {
             options={statusOptions.map((s) => ({ value: s, label: s === "All Status" ? s : s.replace("_", " ").toUpperCase() }))}
           />
         </div>
-        <div className="w-40">
+        <div className="w-full sm:w-40">
           <Select
             label="Type"
             value={typeFilter}
@@ -106,7 +106,7 @@ export default function VehiclesPage() {
             options={typeOptions.map((t) => ({ value: t, label: t === "All Types" ? t : t.charAt(0).toUpperCase() + t.slice(1) }))}
           />
         </div>
-        <div className="w-40">
+        <div className="w-full sm:w-40">
           <Select
             label="Region"
             value={regionFilter}
@@ -212,7 +212,7 @@ export default function VehiclesPage() {
         description={editingVehicle ? `Update details for ${editingVehicle.regNumber}` : "Register a new vehicle in the fleet"}
         size="lg"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             label="Registration Number"
             value={form.regNumber}

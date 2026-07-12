@@ -96,7 +96,7 @@ export default function DriversPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-end gap-3">
-        <div className="w-40">
+        <div className="w-full sm:w-40">
           <Select
             label="Status"
             value={statusFilter}
@@ -104,7 +104,7 @@ export default function DriversPage() {
             options={statusOptions.map((s) => ({ value: s, label: s === "All Status" ? s : s.replace("_", " ").toUpperCase() }))}
           />
         </div>
-        <div className="w-40">
+        <div className="w-full sm:w-40">
           <Select
             label="Region"
             value={regionFilter}
@@ -219,7 +219,7 @@ export default function DriversPage() {
         description={editingDriver ? `Update details for ${editingDriver.name}` : "Register a new driver"}
         size="lg"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             label="Full Name"
             value={form.name}

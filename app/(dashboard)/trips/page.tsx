@@ -124,7 +124,7 @@ export default function TripsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-end gap-3">
-        <div className="w-44">
+        <div className="w-full sm:w-44">
           <Select
             label="Status"
             value={statusFilter}
@@ -193,7 +193,7 @@ export default function TripsPage() {
 
               {/* Lifecycle stepper */}
               {trip.status !== "cancelled" && (
-                <div className="flex items-center gap-1 mb-3">
+                <div className="flex items-center gap-1 mb-3 overflow-x-auto pb-1 -mx-1 px-1">
                   {tripSteps.map((step, si) => (
                     <div key={step.key} className="flex items-center gap-1">
                       <div
@@ -225,7 +225,7 @@ export default function TripsPage() {
               <TripProgress status={trip.status} className="mb-3" />
 
               {/* Details row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-xs">
                 <div>
                   <p className="font-display uppercase tracking-wider text-muted-foreground text-[0.6rem]">Vehicle</p>
                   <p className="mono-data text-foreground mt-0.5">{vehicle?.regNumber || "—"}</p>
@@ -273,7 +273,7 @@ export default function TripsPage() {
         title={editingTrip ? "Edit Trip" : "Create New Trip"}
         size="lg"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Select
             label="Vehicle"
             value={form.vehicleId}

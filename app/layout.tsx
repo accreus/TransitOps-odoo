@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Oswald, JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -23,6 +23,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "TransitOps — Fleet Command Center",
   description: "Transport operations platform for fleet management, dispatch, and logistics",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({

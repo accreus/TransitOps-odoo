@@ -141,7 +141,7 @@ export default function DashboardPage() {
 
           {/* Filters row */}
           <div className="flex flex-wrap items-end gap-2">
-            <div className="w-36">
+            <div className="w-full sm:w-36">
               <Select
                 label="Region"
                 value={regionFilter}
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                 options={regions.map((r) => ({ value: r, label: r }))}
               />
             </div>
-            <div className="w-36">
+            <div className="w-full sm:w-36">
               <Select
                 label="Type"
                 value={typeFilter}
@@ -157,7 +157,7 @@ export default function DashboardPage() {
                 options={vehicleTypes.map((t) => ({ value: t, label: t === "All Types" ? t : t.charAt(0).toUpperCase() + t.slice(1) }))}
               />
             </div>
-            <div className="w-36">
+            <div className="w-full sm:w-36">
               <Select
                 label="Status"
                 value={statusFilter}
@@ -189,12 +189,12 @@ export default function DashboardPage() {
             <div className="flex-1 overflow-auto">
               <table className="w-full table-fixed text-sm" role="table">
                 <colgroup>
-                  <col className="w-[15%]" />
+                  <col className="w-[22%] sm:w-[15%]" />
                   <col className="w-[12%] hidden sm:table-column" />
                   <col className="w-[25%] hidden md:table-column" />
                   <col className="w-[18%] hidden lg:table-column" />
                   <col className="w-[15%] hidden xl:table-column" />
-                  <col className="w-[15%] sm:w-[15%]" />
+                  <col className="w-[20%] sm:w-[15%]" />
                 </colgroup>
                 <thead className="sticky top-0 bg-card z-10">
                   <tr className="border-b border-border">

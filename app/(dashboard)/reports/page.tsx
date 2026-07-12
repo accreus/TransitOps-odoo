@@ -294,28 +294,28 @@ export default function ReportsPage() {
       </div>
 
       {/* Summary stats */}
-      <div className="grid sm:grid-cols-4 gap-4">
-        <div className="bg-card border border-border rounded-sm p-4">
-          <p className="text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Trips Completed</p>
-          <p className="mono-data text-2xl font-bold text-foreground mt-1">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="bg-card border border-border rounded-sm p-3 sm:p-4">
+          <p className="text-[0.6rem] sm:text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Trips Completed</p>
+          <p className="mono-data text-xl sm:text-2xl font-bold text-foreground mt-1">
             {trips.filter((t) => t.status === "completed").length}
           </p>
         </div>
-        <div className="bg-card border border-border rounded-sm p-4">
-          <p className="text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Distance</p>
-          <p className="mono-data text-2xl font-bold text-foreground mt-1">
+        <div className="bg-card border border-border rounded-sm p-3 sm:p-4">
+          <p className="text-[0.6rem] sm:text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Distance</p>
+          <p className="mono-data text-xl sm:text-2xl font-bold text-foreground mt-1">
             {trips.filter((t) => t.status === "completed").reduce((s, t) => s + t.distanceKm, 0).toLocaleString()} km
           </p>
         </div>
-        <div className="bg-card border border-border rounded-sm p-4">
-          <p className="text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Fuel Used</p>
-          <p className="mono-data text-2xl font-bold text-foreground mt-1">
+        <div className="bg-card border border-border rounded-sm p-3 sm:p-4">
+          <p className="text-[0.6rem] sm:text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Fuel Used</p>
+          <p className="mono-data text-xl sm:text-2xl font-bold text-foreground mt-1">
             {trips.filter((t) => t.status === "completed").reduce((s, t) => s + t.fuelUsedLiters, 0).toLocaleString()} L
           </p>
         </div>
-        <div className="bg-card border border-border rounded-sm p-4">
-          <p className="text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Operational Spend</p>
-          <p className="mono-data text-2xl font-bold text-foreground mt-1">
+        <div className="bg-card border border-border rounded-sm p-3 sm:p-4">
+          <p className="text-[0.6rem] sm:text-[0.65rem] font-display uppercase tracking-wider text-muted-foreground">Total Operational Spend</p>
+          <p className="mono-data text-xl sm:text-2xl font-bold text-foreground mt-1">
             ${fuelEntries.reduce((s, e) => s + e.totalCost, 0).toLocaleString(undefined, { minimumFractionDigits: 0 })}
           </p>
         </div>

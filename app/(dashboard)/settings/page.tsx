@@ -74,7 +74,7 @@ export default function SettingsPage() {
           <Shield className="h-4 w-4 text-primary" aria-hidden="true" />
           System Information
         </h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center p-3 bg-secondary/30 rounded-sm">
               <stat.icon className="h-5 w-5 text-muted-foreground mx-auto mb-1" aria-hidden="true" />
