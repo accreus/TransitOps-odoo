@@ -43,7 +43,7 @@ export const RESOURCE_ROLES = {
     delete: ["fleet_manager" as const],
   },
   trips: {
-    create: ["fleet_manager" as const, "dispatcher" as unknown as FrontendRole],
+    create: ["fleet_manager" as const],
     read: ["fleet_manager" as const, "driver" as const, "safety_officer" as const, "financial_analyst" as const],
     update: ["fleet_manager" as const, "driver" as const, "financial_analyst" as const],
     delete: ["fleet_manager" as const],
